@@ -166,7 +166,8 @@ export class Campus {
   }
   makePerson(member) {
     const tex=this.textureLoader.load(`./workadventure-map/tilesets/characters/${member.profile}.png?v=7`);tex.magFilter=THREE.NearestFilter;tex.minFilter=THREE.NearestFilter;tex.colorSpace=THREE.SRGBColorSpace;tex.repeat.set(1/3,1/4)
-    const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,alphaTest:.08}));sprite.scale.set(1.28,1.28,1);this.scene.add(sprite)
+    const spriteMaterial=new THREE.SpriteMaterial({map:tex,transparent:true,alphaTest:.08,depthTest:false,depthWrite:false})
+    const sprite=new THREE.Sprite(spriteMaterial);sprite.scale.set(1.72,1.72,1);sprite.renderOrder=20;this.scene.add(sprite)
     // A separate cropped head lies flat on the pillow, with the body under the duvet.
     const headTex=tex.clone();headTex.repeat.set(1/3,15/128);headTex.offset.set(1/3,1-15/128)
     const head=new THREE.Mesh(new THREE.PlaneGeometry(.53,.5),new THREE.MeshBasicMaterial({map:headTex,transparent:true,alphaTest:.08,side:THREE.DoubleSide}));head.rotation.x=-Math.PI/2;this.scene.add(head)
@@ -207,7 +208,7 @@ export class Campus {
     else if(mode==='dining')target=diningSeats[names.indexOf(p.member.profile)]
     else if(mode==='meeting')target=meetingSeats[names.indexOf(p.member.profile)]
     else if(mode==='smoke')target=[-17,6.2]
-    else target=[positions[p.member.profile][0],positions[p.member.profile][1]+1.25]
+    else target=[positions[p.member.profile][0],positions[p.member.profile][1]+1.55]
     const changed=p.mode!==mode;p.mode=mode
     if(!p.initialized) {p.x=target[0];p.z=target[1];p.initialized=true}
     else if(changed) {
@@ -271,9 +272,10 @@ export class Campus {
       const frame=walking&&!reduced?[0,1,2,1][Math.floor(t*7)%4]:1
       p.tex.offset.set(frame/3,1-(Math.floor(direction/3)+1)/4)
       const seated=['walk','break','lounge','dining','meeting'].includes(p.mode)&&!walking
-      p.sprite.position.set(p.x,seated ? .78 : p.mode==='desk'&&!walking ? 1.33 : 1.1,p.z);p.sprite.scale.set(1.28,seated ? .9 : 1.28,1);p.sprite.visible=!['sleep','leave'].includes(p.mode)
+      p.sprite.position.set(p.x,seated ? 1.02 : p.mode==='desk'&&!walking ? 1.56 : 1.28,p.z);p.sprite.scale.set(1.72,seated ? 1.18 : 1.72,1);p.sprite.visible=!['sleep','leave'].includes(p.mode)
       p.head.visible=p.mode==='sleep';const [bx,bz]=beds[p.member.profile];p.head.position.set(bx,1.04,bz-.78)
-      const anchor=new THREE.Vector3(p.x,p.mode==='sleep'?1.0:2.2,p.z+(p.mode==='sleep'?1.3:0)).project(this.camera);const stage=$('#office-map');const x=(anchor.x*.5+.5)*stage.clientWidth,y=(-anchor.y*.5+.5)*stage.clientHeight
+      // Keep the floating tag above the full sprite so the agent and animation stay visible.
+      const anchor=new THREE.Vector3(p.x,p.mode==='sleep'?1.45:3.15,p.z+(p.mode==='sleep'?1.3:0)).project(this.camera);const stage=$('#office-map');const x=(anchor.x*.5+.5)*stage.clientWidth,y=(-anchor.y*.5+.5)*stage.clientHeight
       p.tag.style.display=p.mode==='leave'||Math.abs(anchor.x)>1||Math.abs(anchor.y)>1?'none':''
       if(p.tag.style.display!=='none')labels.push({p,x,y,w:p.tag.offsetWidth,h:p.tag.offsetHeight})
     }
