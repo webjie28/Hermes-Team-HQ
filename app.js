@@ -1,10 +1,10 @@
 const $ = (selector) => document.querySelector(selector)
-import { updateReviewMembers } from './review-ui.js?v=13'
-import { publicSnapshot } from './public-demo.js?v=1'
+import { updateReviewMembers } from './review-ui.js?v=14'
+import { publicSnapshot } from './public-demo.js?v=2'
 const $$ = (selector) => [...document.querySelectorAll(selector)]
 let snapshot = null
 let campus = null
-import('./campus.js?v=15').then(({ Campus }) => {
+import('./campus.js?v=16').then(({ Campus }) => {
   campus = new Campus()
   if (snapshot) campus.update(snapshot)
 }).catch(error => {

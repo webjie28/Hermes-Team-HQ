@@ -31,7 +31,7 @@ h1 { font-size: 2rem; }
 .office-title { padding: 22px 24px; }
 .office-actions a { color: #46634f; font-size: 12px; }
 .campus-layout { display: grid; grid-template-columns: minmax(0,1fr) 270px; border-block: 1px solid #dae0d3; }
-.office-map { display: block; position: relative; height: 680px; min-height: 0; padding: 0; overflow: hidden; background: #b2bf88; border-radius: 0; }
+.office-map { display: block; position: relative; height: 780px; min-height: 0; padding: 0; overflow: hidden; background: #b2bf88; border-radius: 0; }
 #campus-stage, #campus-labels { position: absolute; inset: 0; }
 #campus-stage canvas { width: 100%; height: 100%; display: block; touch-action: none; }
 #campus-labels { pointer-events: none; overflow: hidden; }
@@ -74,7 +74,7 @@ h1 { font-size: 2rem; }
 .routine-buttons { display:flex;flex-wrap:wrap;gap:5px; }
 .routine-buttons button { font-size:11px;padding:7px 9px;border:1px solid #cad4c1;border-radius:7px;background:#fffdf4;color:#4a6148; }
 .routine-buttons button[aria-pressed=true] { background:#3b6552;color:white;border-color:#3b6552; }
-.campus-roster { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); padding: 16px; gap: 7px; }
+.campus-roster { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); padding: 16px; gap: 7px; }
 .roster-person { border: 1px solid #dbe2d3; border-radius: 10px; background: #f2f5ed; color: #3d4d36; text-align: left; padding: 12px 10px; min-width: 0; }
 .roster-person.selected { border-color: #59866d; background: #e6efdf; }
 .roster-person strong,.roster-person span,.roster-person small { display: block; }

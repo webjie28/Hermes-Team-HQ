@@ -1,13 +1,16 @@
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
 const text = value => typeof value === 'string' ? value : JSON.stringify(value, null, 2)
 const advice = {
-  judith: 'Architecture reviewer: Firebase/Vercel read-only metadata when needed; no secrets or production writes.',
+  judith: 'Architecture and documentation lead: read-only technical metadata when needed; no secrets or production writes.',
   david: 'Product requirements and acceptance: no Firebase or Vercel account access needed.',
   jake: 'Frontend: Vercel preview access only. Use Firebase emulator/test data, not production admin credentials.',
   ralph: 'Developer tooling: narrowly scoped CI/CD setup only when required. No owner role or billing access.',
   rick: 'Firebase development owner: only required products in a development project. Production rules/data changes require a separate approval.',
   fulton: 'QA/security: preview URLs and read-only logs/configuration with sensitive data redacted. No production write access.',
-  joem: 'Vercel release operator: project-scoped preview deployments. Production release needs approval for the exact commit and environment.'
+  joem: 'Vercel release operator: project-scoped preview deployments. Production release needs approval for the exact commit and environment.',
+  red: 'Backend/data: development database and server logs only. Production data, secrets, migrations, and rule changes require exact approval.',
+  espina: 'Design systems: preview links and non-sensitive design assets only. No database or production access needed.',
+  marielle: 'Acceptance QA: preview deployments, test accounts, and redacted logs only. No production write access.'
 }
 let members = [], records = [], token = '', selected = null
 const dialog = document.createElement('dialog')

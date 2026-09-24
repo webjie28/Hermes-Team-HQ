@@ -3,14 +3,14 @@ import * as THREE from './vendor/three.module.js'
 const $ = s => document.querySelector(s)
 const safe = (v = '') => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
 const duration = s => `${Math.floor((s || 0)/3600)}h ${Math.floor((s || 0)%3600/60)}m`
-const positions = { benjie:[-9,-6], judith:[-4.6,-6], david:[1,-6], jake:[6,-6], ralph:[-9,0], rick:[-4.6,0], fulton:[1,0], joem:[6,0] }
+const positions = { benjie:[-9,-6], judith:[-4.6,-6], david:[1,-6], jake:[6,-6], ralph:[-9,0], rick:[-4.6,0], fulton:[1,0], joem:[6,0], red:[1.2,5], espina:[5.1,5], marielle:[9,5] }
 const names = Object.keys(positions)
-const meetingSeats = [[-17,-5.7],[-15.5,-5.7],[-14,-5.7],[-17,-2.7],[-15.5,-2.7],[-14,-2.7],[-18.5,-4.2],[-12.7,-4.2]]
-const diningSeats = [-8.8,-6.8,-4.8,-2.8].flatMap(x => [[x,-15.8],[x,-12.6]])
+const meetingSeats = [-18,-16.4,-14.8,-13.2].flatMap(x => [[x,-6.4],[x,-4.2],[x,-2]])
+const diningSeats = [-9.2,-7.5,-5.8,-4.1,-2.4,-.7].flatMap(x => [[x,-15.8],[x,-12.6]])
 const diningEntry = [-1.05,-11.1]
 const diningApproach = index => [diningEntry,[-1.05,index%2===0 ? -17 : -11.1],[diningSeats[index][0],index%2===0 ? -17 : -11.1],diningSeats[index]]
 const colors = ['#6e9d8b','#a497c6','#89a1ba','#cbad78','#b8a2c4','#86aeb7','#c4978d','#a1ac85']
-const beds = Object.fromEntries(names.map((n,i) => [n, [2.2+(i%4)*2.2, 5.1+Math.floor(i/4)*3.15]]))
+const beds = Object.fromEntries(names.map((n,i) => [n, [.5+(i%6)*1.8, 11.2+Math.floor(i/6)*3.05]]))
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export class Campus {
@@ -108,8 +108,8 @@ export class Campus {
     this.box(-2.1,1.1,-1.1,.6,1.3,.15,'#ece3cf')
     this.box(-3.1,1.3,-1.7,.12,2,1.2,'#947956')
     this.box(-.5,.45,2.6,23.7,.025,1.3,'#ebe1c8')
-    // Lower floor: gym, dining/lounge, meeting point, and quiet sleeping wing.
-    this.box(-9,.46,6,6.6,.035,5.8,'#788678');this.box(-3.6,.46,6,3.8,.035,5.8,'#d7d2b9');this.box(5.2,.46,6.2,11.9,.035,5.7,'#cdd7cd')
+    // Lower floor: gym and lounge remain separate; the east side becomes a larger specialist wing.
+    this.box(-9,.46,6,6.6,.035,5.8,'#788678');this.box(-3.6,.46,6,3.8,.035,5.8,'#d7d2b9');this.box(5.2,.46,6.2,11.9,.035,5.7,'#e4d0ae')
     this.box(-5.6,.9,6,.13,.9,5.7,'#e7dec8');this.box(-.7,.9,6,.13,.9,5.7,'#e7dec8')
     this.treadmill(-10.6,5);this.treadmill(-8.7,5)
     this.box(-7,1.1,7.6,1.5,.15,.5,'#333d3e');for(const x of [-7.6,-7.1,-6.6]) {this.box(x,1.3,7.6,.42,.07,.08,'#b2b5a8');for(const dx of [-.2,.2])this.cylinder(x+dx,1.3,7.6,.14,.13,'#343b39')}
@@ -130,24 +130,26 @@ export class Campus {
     this.box(.8,.9,-14.8,1.2,1,3.3,'#aab395');this.box(.8,1.44,-14.8,1.35,.1,3.4,'#f0e9d6')
     this.box(.8,1.73,-15.7,.55,.5,.6,'#475954');this.cylinder(.8,1.62,-14.5,.17,.25,'#ece6cd')
     this.plant(1,-17.2);this.plant(-10.3,-17.2)
-    this.sign('DINING PAVILION | 8 SEATS',-5.2,2.5,-17.85,6.5)
-    // Enclosed meeting annex, eight dedicated seats, open door, and smart TV.
+    this.sign('DINING PAVILION | 12 SEATS',-5.2,2.5,-17.85,6.5)
+    // Enclosed meeting annex, twelve dedicated seats, open door, and smart TV.
     this.box(-15.6,.3,-4.2,7.4,.25,6.8,'#d8c4a5')
     this.box(-15.6,1.6,-7.6,7.4,2.5,.18,'#eee5d4')
     this.box(-19.3,1.1,-4.2,.18,1.5,6.8,'#eee5d4')
     this.box(-15.6,.95,-.8,7.4,1.2,.18,'#eee5d4')
     this.box(-11.9,1.1,-6,.18,1.5,3.2,'#eee5d4');this.box(-11.9,1.1,-1.5,.18,1.5,1.4,'#eee5d4')
     this.box(-12.5,1.25,-3.9,1.2,2,.12,'#977b58')
-    this.box(-15.6,1,-4.2,4.4,.18,1.7,'#927454')
+    this.box(-15.6,1,-4.2,5.6,.18,1.7,'#927454')
     for(const [x,z] of meetingSeats)this.chair(x,z)
     this.box(-15.6,2.15,-7.45,3.5,1.8,.12,'#222b2e');this.box(-15.6,2.15,-7.37,3.3,1.6,.02,'#355c65')
     this.sign('MONDAY 09:00 | TEAM SYNC',-15.6,2.15,-7.34,3.1)
     // Outdoor smoking area stays away from entrances and food areas.
     this.box(-16.7,.08,6.2,3.8,.1,4.2,'#9ca18f');this.box(-17,.58,6.2,1.1,.18,2.7,'#8a755e');this.cylinder(-15.8,.75,7.2,.18,.65,'#555c56');this.cylinder(-15.8,1.1,7.2,.32,.08,'#3f4741')
     this.box(-2.3,1.1,4.1,1,.13,.7,'#d6c5a6');this.box(-2.3,1.4,4.1,.47,.52,.4,'#4b554d')
+    // Expanded quiet wing gives all eleven people dedicated rest space without crowding the new desks.
+    this.box(5.1,.3,13.1,12.8,.25,7.5,'#d8ddd2');this.box(5.1,.85,16.85,12.8,1,.16,'#e9e3d4');this.box(11.5,.8,13.1,.16,.9,7.5,'#e9e3d4')
     for(const [i,name] of names.entries()) {this.desk(name,...positions[name]);this.bed(name,...beds[name],i)}
     this.sign('BENJIE + JUDITH | PRIVATE OFFICE',-7,3.25,-9.12,7.8);this.sign('THE DEVELOPMENT STUDIO',3.9,3.25,-9.12,6.2)
-    this.sign('GYM & RECOVERY',-9,1.5,3.5,3.2);this.sign('COFFEE LOUNGE',-3.6,1.5,3.5,3.2);this.sign('MEETING ROOM | 8 SEATS',-15.6,1.5,-.65,5);this.sign('QUIET HOURS',5.2,1.3,3.5,3,'#6d7e7c');this.sign('SMOKING AREA',-16.7,2.1,8.5,4.2,'#62695e')
+    this.sign('GYM & RECOVERY',-9,1.5,3.5,3.2);this.sign('COFFEE LOUNGE',-3.6,1.5,3.5,3.2);this.sign('MEETING ROOM | 12 SEATS',-15.6,1.5,-.65,5);this.sign('SPECIALIST WING',5.2,1.3,3.5,3.7,'#6d7e7c');this.sign('QUIET HOURS | 11 BEDS',5.1,1.5,16.7,5,'#6d7e7c');this.sign('SMOKING AREA',-16.7,2.1,8.5,4.2,'#62695e')
     for(const x of [-18.5,-14.9])this.box(x,1,8.5,.09,2,.09,'#62695e')
     this.sign('BENJIE CREATIVE CAMPUS',-7,1.3,11,5.3);for(const x of [-9,-5])this.box(x,.6,11,.08,1.2,.09,'#647151')
     for(const [x,z] of [[-11.8,-8.3],[-2.3,-8.3],[10.5,-8.3],[10.5,1.2],[-11.8,1.2],[.3,8.8]])this.plant(x,z)
@@ -176,7 +178,7 @@ export class Campus {
   }
   update(snapshot) {
     this.snapshot=snapshot
-    const manager={profile:'benjie',name:'BENJIE',role:'Hermes Main',level:'Manager',state:snapshot.manager.on_shift?'available':'off_shift',state_label:snapshot.manager.on_shift?'On shift · no tracked task':'Off shift',skills:['Team coordination','Review & approvals'],shift_label:'10 PM–8 AM',personal:'Night shift',recorded_seconds_today:null,recorded_seconds_week:null}
+    const manager={profile:'benjie',name:'BENJIE',role:'Founder · Hermes Main · Final Reviewer',level:'Owner',state:snapshot.manager.on_shift?'available':'off_shift',state_label:snapshot.manager.on_shift?'On shift · no tracked task':'Off shift',skills:['Team coordination','Project management','Priority and workload planning','Code review','Engineering standards','Final review & approvals'],shift_label:'10 PM–8 AM',personal:'Night shift',recorded_seconds_today:null,recorded_seconds_week:null,gender:'male'}
     Object.assign(manager,{activity:snapshot.manager.activity,activity_label:snapshot.manager.activity_label,activity_source:snapshot.manager.activity_source,state_label:snapshot.manager.on_shift?'On shift':snapshot.manager.activity_label})
     this.members=[manager,...snapshot.members]
     for(const m of this.members) {const p=this.people.get(m.profile)||this.makePerson(m);p.member=m;p.tag.className=`campus-tag ${m.state} ${m.profile===this.selected?'selected':''}`;p.tag.innerHTML=`<strong><i></i>${safe(m.name)}</strong><small>${safe(m.state_label)} · ${m.recorded_seconds_today == null?'untracked':duration(m.recorded_seconds_today)}</small>`;p.tag.setAttribute('aria-label',`${m.name}: ${m.state_label}. ${m.current_task?.title || 'No active task'}`);this.place(p)}
@@ -232,7 +234,7 @@ export class Campus {
   renderInspector() {
     const m=this.members.find(m=>m.profile===this.selected);if(!m)return
     const task=m.current_task
-    $('#campus-inspector').innerHTML=`<span class="inspector-kicker">TEAM MEMBER</span><div class="inspector-portrait"><span style="background-image:url('./workadventure-map/tilesets/characters/${m.profile}.png?v=7')"></span></div><h3>${safe(m.name)}</h3><p class="role">${safe(m.role)}<br>${safe(m.level)} · ${m.profile==='judith'?'Female':'Male'}</p><span class="inspector-state">${safe(m.state_label)}</span><div class="inspector-task"><span class="inspector-kicker">${task?'CURRENT ASSIGNMENT':'CURRENT ACTIVITY'}</span>${task?safe(task.title):m.state==='off_shift'?'Off shift · resting in the campus visualization.':m.state==='leave'?'On leave · away from campus.':m.state==='break'?'On a scheduled 30-minute rest break.':'No active assignment. Ready for a task.'}${task?`<div class="inspector-meta">${safe(task.status)}${m.task_elapsed_seconds!=null?' · '+duration(m.task_elapsed_seconds)+' since task started':''}</div>`:''}</div><span class="inspector-kicker">RECORDED WORK TODAY</span><div class="inspector-time">${m.recorded_seconds_today==null?'Not tracked':duration(m.recorded_seconds_today)}</div><p class="inspector-meta">This week: ${m.recorded_seconds_week==null?'not tracked':duration(m.recorded_seconds_week)}<br>${safe(m.shift_label || (m.shift==='night'?'10 PM–8 AM':'9 AM–5 PM'))}<br>${safe(m.personal||'')}</p><p class="inspector-meta">${(m.skills||[]).map(safe).join(' · ')}</p>${m.telegram_url?`<div class="inspector-links"><a href="${safe(m.telegram_url)}" target="_blank" rel="noreferrer">Open Telegram desk ↗</a></div>`:''}<div class="routine-controls"><label class="inspector-kicker" for="routine-preview">PREVIEW CHARACTER ROUTINE</label><select id="routine-preview"></select><p class="routine-note">${this.preview==='live'?'Routines illustrate status; recorded time comes from Hermes.':'Animation preview only. Hermes status and work time are unchanged.'}</p></div>`
+    $('#campus-inspector').innerHTML=`<span class="inspector-kicker">TEAM MEMBER</span><div class="inspector-portrait"><span style="background-image:url('./workadventure-map/tilesets/characters/${m.profile}.png?v=7')"></span></div><h3>${safe(m.name)}</h3><p class="role">${safe(m.role)}<br>${safe(m.level)} · ${safe(m.gender==='female'?'Female':'Male')}</p><span class="inspector-state">${safe(m.state_label)}</span><div class="inspector-task"><span class="inspector-kicker">${task?'CURRENT ASSIGNMENT':'CURRENT ACTIVITY'}</span>${task?safe(task.title):m.state==='off_shift'?'Off shift · resting in the campus visualization.':m.state==='leave'?'On leave · away from campus.':m.state==='break'?'On a scheduled 30-minute rest break.':'No active assignment. Ready for a task.'}${task?`<div class="inspector-meta">${safe(task.status)}${m.task_elapsed_seconds!=null?' · '+duration(m.task_elapsed_seconds)+' since task started':''}</div>`:''}</div><span class="inspector-kicker">RECORDED WORK TODAY</span><div class="inspector-time">${m.recorded_seconds_today==null?'Not tracked':duration(m.recorded_seconds_today)}</div><p class="inspector-meta">This week: ${m.recorded_seconds_week==null?'not tracked':duration(m.recorded_seconds_week)}<br>${safe(m.shift_label || (m.shift==='night'?'10 PM–8 AM':'9 AM–5 PM'))}<br>${safe(m.personal||'')}</p><p class="inspector-meta">${(m.skills||[]).map(safe).join(' · ')}</p>${m.telegram_url?`<div class="inspector-links"><a href="${safe(m.telegram_url)}" target="_blank" rel="noreferrer">Open Telegram desk ↗</a></div>`:''}<div class="routine-controls"><label class="inspector-kicker" for="routine-preview">PREVIEW CHARACTER ROUTINE</label><select id="routine-preview"></select><p class="routine-note">${this.preview==='live'?'Routines illustrate status; recorded time comes from Hermes.':'Animation preview only. Hermes status and work time are unchanged.'}</p></div>`
     const routines=document.createElement('div');routines.className='routine-buttons';routines.setAttribute('role','group');routines.setAttribute('aria-label','Preview character routine')
     for(const [value,label] of [['live','Live'],['desk','Computer'],['walk','Sofa'],['dining','Dining'],['meeting','Meeting'],['smoke','Smoking area'],['gym','Gym'],['sleep','Rest']]) {
       const button=document.createElement('button');button.textContent=label;button.setAttribute('aria-pressed',String(this.preview===value));button.onclick=()=>{this.preview=value;this.place(this.people.get(this.selected));this.renderInspector()};routines.append(button)

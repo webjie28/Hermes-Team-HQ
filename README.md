@@ -46,6 +46,11 @@ The public site is a safe, read-only showcase. BENJIE's private localhost dashbo
 | Rick | Senior Full-stack Engineer | Implement application flows, APIs, data integration, validation, and performance fixes | Working feature, test evidence, and data/schema changes |
 | Fulton | Senior QA & Security Engineer | Create tests, reproduce defects, run regression checks, and review common security risks | Pass/fail report, evidence, blockers, and release recommendation |
 | Joem | Senior DevOps & Release Engineer | Prepare CI/CD, preview releases, health checks, observability, and rollback instructions | Release candidate and exact deployment request; production remains approval-gated |
+| Red | Senior Backend & Data Engineer | Build secure APIs, authentication, data models, migrations, and server-side validation | Schema changes, access requirements, migration evidence, and production-impacting decisions |
+| Espina | Senior UI/UX & Design Systems Designer | Create user flows, wireframes, prototypes, reusable design tokens, and usability reviews | Design direction, interactive prototype, accessibility decisions, and visual sign-off |
+| Marielle | Senior QA Automation & Acceptance Lead | Convert acceptance criteria into E2E, cross-browser, mobile, and release-readiness tests | Independent acceptance report, evidence, failures, and release recommendation |
+
+BENJIE remains the owner, project manager, engineering-standards lead, code reviewer, and final approver. Judith additionally owns documentation and knowledge management, so architectural decisions, sources, runbooks, and handoffs stay connected instead of becoming a separate documentation silo.
 
 ### How autonomous are they?
 

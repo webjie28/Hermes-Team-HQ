@@ -1,11 +1,14 @@
 const people = [
-  ['judith','Judith','Technical Research & Architecture','Lead Senior','#2f8f83',['Technical research','Architecture decisions','API evaluation','Security review'],'Gym Mon/Wed/Fri · 8:00 AM'],
+  ['judith','Judith','Research, Architecture & Documentation','Lead Senior','#2f8f83',['Technical research','Architecture decisions','Security review','Documentation','Knowledge management'],'Gym Mon/Wed/Fri · 8:00 AM'],
   ['david','David','Product Engineer','Senior','#4f8f6b',['Requirements','User stories','Acceptance criteria','Technical writing'],'Gym Tue/Thu · 6:30 PM'],
   ['jake','Fer','Frontend Engineer','Senior','#d69b3a',['TypeScript','UI implementation','Responsive design','Accessibility'],'Sketch club Wed · 7:00 PM'],
   ['ralph','Inciong','Developer Tooling Engineer','Senior','#9366cc',['Automation','Build tooling','CLI workflows','Developer experience'],'Band practice Fri · 7:00 PM'],
   ['rick','Rick','Full-stack Engineer','Senior','#3f7cc9',['Frontend','Backend','Integration','Performance'],'Cycling Sat · 7:00 AM'],
   ['fulton','Fulton','QA & Security Engineer','Senior','#c65353',['Test automation','Root cause','Regression','Security review'],'Family night Thu · 6:30 PM'],
   ['joem','Joem','DevOps & Release Engineer','Senior','#c58435',['CI/CD','Deployments','Observability','Release control'],'Gym Mon/Wed/Fri · 6:00 PM'],
+  ['red','Red','Backend & Data Engineer','Senior','#9f4e45',['API engineering','Data modeling','Authentication','Database migrations','Server security'],'Coffee and reading · 6:00 PM'],
+  ['espina','Espina','UI/UX & Design Systems Designer','Senior','#b07698',['UX flows','Wireframes','Prototypes','Design systems','Usability review'],'Sketching · 6:30 PM'],
+  ['marielle','Marielle','QA Automation & Acceptance Lead','Senior','#4f8295',['Acceptance testing','End-to-end automation','Cross-browser QA','Mobile QA','Release evidence'],'Yoga and coffee · 6:00 PM'],
 ]
 
 export function publicSnapshot() {
@@ -16,6 +19,9 @@ export function publicSnapshot() {
     {id:'public-4',assignee:'rick',status:'ready',title:'Catalog and full-stack integration'},
     {id:'public-5',assignee:'fulton',status:'todo',title:'QA, accessibility, and security release gate'},
     {id:'public-6',assignee:'joem',status:'scheduled',title:'Release candidate and owner handoff'},
+    {id:'public-7',assignee:'red',status:'ready',title:'Backend contract and secure data model'},
+    {id:'public-8',assignee:'espina',status:'review',title:'Design system and interaction prototype'},
+    {id:'public-9',assignee:'marielle',status:'todo',title:'Acceptance and cross-browser test plan'},
   ]
   const current = Object.fromEntries(tasks.map(task=>[task.assignee,task]))
   const members = people.map(([profile,name,role,level,color,skills,personal], index) => ({
@@ -30,5 +36,5 @@ export function publicSnapshot() {
   }))
   return {public_preview:true,now:new Date().toISOString(),timezone:'Asia/Singapore',
     manager:{name:'BENJIE',title:'Founder & Hermes Main',on_shift:true,activity:'desk',activity_label:'Reviewing the team',activity_source:'Public preview'},
-    gateway:{state:'preview',telegram:'private'},summary:{working:2,available:4,needs_help:0,on_shift:members.length},members,tasks}
+    gateway:{state:'preview',telegram:'private'},summary:{working:members.filter(m=>m.state==='working').length,available:members.filter(m=>m.state==='available').length,needs_help:0,on_shift:members.length},members,tasks}
 }
