@@ -1,6 +1,6 @@
 const $ = (selector) => document.querySelector(selector)
 import { updateReviewMembers } from './review-ui.js?v=14'
-import { publicSnapshot } from './public-demo.js?v=2'
+import { publicSnapshot } from './public-demo.js?v=3'
 const $$ = (selector) => [...document.querySelectorAll(selector)]
 let snapshot = null
 let campus = null

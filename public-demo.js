@@ -25,7 +25,7 @@ export function publicSnapshot() {
   ]
   const current = Object.fromEntries(tasks.map(task=>[task.assignee,task]))
   const members = people.map(([profile,name,role,level,color,skills,personal], index) => ({
-    profile,name,role,level,color,skills,personal,shift:profile==='judith'?'night':'day',
+    profile,name,role,level,color,skills,personal,gender:['judith','marielle'].includes(profile)?'female':'male',shift:profile==='judith'?'night':'day',
     shift_label:profile==='judith'?'Night shift · 10:00 PM–8:00 AM':'Day shift · 8:00 AM–5:00 PM',
     state:current[profile]?.status==='running'?'working':current[profile]?.status==='review'?'review':'available',
     state_label:current[profile]?.status==='running'?'Working':current[profile]?.status==='review'?'In review':'Available',
