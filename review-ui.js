@@ -18,7 +18,7 @@ async function load() {
   if (!response.ok && !['localhost','127.0.0.1'].includes(location.hostname)) { records=[]; token=''; return }
   if (!response.ok) throw new Error('Review service unavailable. Refresh after the dashboard restarts.')
   const data = await response.json(); records = data.items; token = data.token
-  const pending = records.filter(item=>!item.decision && (item.kind==='access'||['review','blocked'].includes(item.status))).length
+  const pending = records.filter(item=>!item.decision && (item.kind==='access'||['review','done','blocked'].includes(item.status))).length
   const badge = document.querySelector('#review-pending-count'); if (badge) badge.textContent=pending
 }
 async function save(path, data) {
@@ -48,10 +48,10 @@ function card(item) {
 function render() {
   const publicMode = !['localhost','127.0.0.1'].includes(location.hostname)
   const person = members.find(m=>m.profile===selected)
-  const own = selected ? records.filter(r=>r.profile===selected) : records.filter(r=>r.kind==='access'||['review','blocked'].includes(r.status))
+  const own = selected ? records.filter(r=>r.profile===selected) : records.filter(r=>r.kind==='access'||['review','done','blocked'].includes(r.status))
   const pending = own.filter(item=>!item.decision).length
   dialog.innerHTML = `<header><div><p class="review-kicker">OWNER CONTROL</p><h2>${esc(person?.name || 'Review desk')}</h2>${person?`<p>${esc(person.role)}</p>`:'<p>Decisions waiting for BENJIE</p>'}</div><div class="review-header-actions"><span class="review-count">${pending} pending</span><button class="review-close" aria-label="Close review">×</button></div></header>
-    <div class="review-layout"><aside class="review-sidebar"><p class="review-sidebar-label">Workspace</p><button class="review-filter active"><span>Inbox</span><b>${pending}</b></button>
+    <div class="review-layout"><aside class="review-sidebar"><p class="review-sidebar-label">Workspace</p><button class="review-filter active"><span>Approval inbox · 24/7</span><b>${pending}</b></button>
       <div class="review-safety"><strong>Approval stays with you</strong><p>Firebase and Vercel are not connected. Nothing here can grant access or deploy.</p></div>
       ${person?`<div class="review-person-advice"><strong>Access guidance</strong><p>${esc(advice[person.profile])}</p><a href="${esc(person.telegram_url)}" target="_blank" rel="noreferrer">Open Telegram desk ↗</a></div>`:''}
       ${publicMode?'':`<button class="new-access-button" type="button">+ Draft access request</button>`}</aside><section class="review-workspace">

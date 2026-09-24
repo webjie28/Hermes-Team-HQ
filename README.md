@@ -7,12 +7,17 @@
 [![GitHub Pages](https://img.shields.io/github/actions/workflow/status/webjie28/MY-PERSONAL-TEAM-AGENT/pages.yml?label=live%20site&style=flat-square)](https://webjie28.github.io/MY-PERSONAL-TEAM-AGENT/)
 ![Three.js](https://img.shields.io/badge/Three.js-isometric%20campus-222?style=flat-square)
 ![Privacy](https://img.shields.io/badge/public%20build-read--only-35664d?style=flat-square)
+![JavaScript](https://img.shields.io/badge/JavaScript-61.7%25-F7DF1E?style=flat-square&logo=javascript&logoColor=111)
+![CSS](https://img.shields.io/badge/CSS-32.2%25-663399?style=flat-square&logo=css&logoColor=fff)
+![HTML](https://img.shields.io/badge/HTML-6.1%25-E34F26?style=flat-square&logo=html5&logoColor=fff)
 
 **[Open the live campus →](https://webjie28.github.io/MY-PERSONAL-TEAM-AGENT/)**
 
 </div>
 
 ---
+
+![The standing Hermes development team inside the campus](assets/hermes-team-standing.png)
 
 ## What this is
 
@@ -30,17 +35,43 @@ The public site is a safe, read-only showcase. BENJIE's private localhost dashbo
 - Owner review desk interface
 - Responsive layout for desktop and smaller screens
 
-## Team
+## Team and operating ideas
 
-| Team member | Position | Focus |
-| --- | --- | --- |
-| Judith | Lead Senior · Technical Research & Architecture | Research, architecture, APIs, security review |
-| David | Senior Product Engineer | Requirements, stories, acceptance criteria |
-| Fer | Senior Frontend Engineer | TypeScript, responsive UI, accessibility |
-| Inciong | Senior Developer Tooling Engineer | Automation, builds, CLI workflows |
-| Rick | Senior Full-stack Engineer | Frontend, backend, integrations, performance |
-| Fulton | Senior QA & Security Engineer | Test automation, regression, security |
-| Joem | Senior DevOps & Release Engineer | CI/CD, deployment, observability |
+| Team member | Position | What they can own independently | What comes back to BENJIE |
+| --- | --- | --- | --- |
+| Judith | Lead Senior · Technical Research & Architecture | Research options, compare APIs, write architecture decisions, identify technical and security risks | Recommended direction, sources, trade-offs, and any high-risk decision |
+| David | Senior Product Engineer | Turn a goal into requirements, user stories, edge cases, and acceptance criteria | Product brief and decisions that change scope |
+| Fer | Senior Frontend Engineer | Build responsive interfaces, reusable components, accessibility, and browser behavior | Visual preview, implementation report, and UI decisions needing approval |
+| Inciong | Senior Developer Tooling Engineer | Improve scripts, automation, local tooling, build checks, and repeatable workflows | Tooling changes, command output, and environment-impacting proposals |
+| Rick | Senior Full-stack Engineer | Implement application flows, APIs, data integration, validation, and performance fixes | Working feature, test evidence, and data/schema changes |
+| Fulton | Senior QA & Security Engineer | Create tests, reproduce defects, run regression checks, and review common security risks | Pass/fail report, evidence, blockers, and release recommendation |
+| Joem | Senior DevOps & Release Engineer | Prepare CI/CD, preview releases, health checks, observability, and rollback instructions | Release candidate and exact deployment request; production remains approval-gated |
+
+### How autonomous are they?
+
+They are **role-based AI agents, not conscious people**. They do not have feelings, personal beliefs, or a human mind. Within an assigned task, however, each agent can inspect context, break work into steps, use allowed local tools, produce artifacts, test its work, report blockers, and recommend the next action.
+
+Their autonomy is deliberately bounded:
+
+1. BENJIE provides the objective and constraints.
+2. The assigned specialist plans and executes only within its role and available permissions.
+3. The agent records evidence and submits a report when work is ready, blocked, or complete.
+4. The report remains in the **Approval inbox** until BENJIE approves, holds, sends it back, or adds an instruction.
+5. Production deployment, cloud access, secrets, public publishing, and destructive actions never become automatic merely because an agent finished its task.
+
+## 24/7 approval inbox
+
+The private localhost dashboard stores review items and decisions in a local SQLite ledger. `review`, `done`, `blocked`, and access-request items remain available when BENJIE is away and appear again in **Review desk → Approval inbox · 24/7** when the dashboard is reopened.
+
+```text
+Assigned → Agent works → Tests and report → Approval inbox
+                                              ├─ Approve
+                                              ├─ Hold
+                                              ├─ Send back
+                                              └─ Instruct
+```
+
+“24/7 inbox” means the queue is durable and can receive reports while the Hermes processes and computer are running. It does not claim that agents keep executing while the host computer is powered off. The public GitHub Pages site stays read-only and never exposes the private approval ledger.
 
 ## Architecture
 
@@ -56,13 +87,18 @@ No write-capable API             Local filesystem access
 
 This separation prevents a public static site from becoming an exposed administration panel.
 
-## Technology
+## Technology and languages
 
-- HTML5 and modern CSS
-- Vanilla JavaScript modules
-- Three.js for the 3D/isometric campus
-- WorkAdventure/Pipoya-compatible character sprites
-- GitHub Actions and GitHub Pages
+| Layer | Technology | Use |
+| --- | --- | --- |
+| Interface | HTML5, CSS3 | Accessible structure, responsive dashboard, visual campus shell |
+| Application | Modern JavaScript ES modules | Status UI, board, review desk, scheduling, interactions |
+| Campus rendering | Three.js + WebGL | Isometric office, rooms, furniture, movement, camera controls |
+| Characters | WorkAdventure/Pipoya-compatible sprites | Standing, walking, working, resting, and personal-routine states |
+| Private control plane | Python + SQLite | Local API, Hermes status aggregation, durable approval ledger |
+| Delivery | GitHub Actions + GitHub Pages | Automated read-only public deployment |
+
+GitHub's language panel is generated automatically from tracked source files. The README badges mirror the current repository mix shown by GitHub: JavaScript 61.7%, CSS 32.2%, and HTML 6.1%. Python powers the private localhost control plane and is intentionally excluded from the public static build.
 
 ## Run locally
 
