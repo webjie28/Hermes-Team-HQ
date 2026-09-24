@@ -35,15 +35,18 @@ h1 { font-size: 2rem; }
 #campus-stage, #campus-labels { position: absolute; inset: 0; }
 #campus-stage canvas { width: 100%; height: 100%; display: block; touch-action: none; }
 #campus-labels { pointer-events: none; overflow: hidden; }
-.campus-tag { position: absolute; left: 0; top: 0; padding: 5px 9px; border: 1px solid #fff9; border-radius: 9px; background: #fffef3ed; box-shadow: 0 3px 10px #27392624; color: #334638; pointer-events: auto; white-space: nowrap; font-size: 11px; line-height: 1.25; }
-.campus-tag.selected { outline: 2px solid #327560; }
-.campus-position { display: block; max-width: 142px; white-space: normal; overflow-wrap: anywhere; color: #4c6152; font-size: 9px; font-weight: 500; line-height: 1.2; margin-bottom: 3px; }
+.campus-tag { position: absolute; left: 0; top: 0; min-width: 0; padding: 4px 8px; border: 1px solid #dce5d7; border-radius: 999px; background: #fffef3e8; box-shadow: 0 2px 7px #2739261c; color: #334638; pointer-events: auto; white-space: nowrap; font-size: 10px; line-height: 1.15; transition: padding .15s ease, border-radius .15s ease, background .15s ease; }
+.campus-tag.selected { outline: 2px solid #327560; background: #fffef8f5; }
+.campus-position { display: none; max-width: 128px; white-space: normal; overflow-wrap: anywhere; color: #4c6152; font-size: 8px; font-weight: 600; line-height: 1.2; margin-bottom: 3px; }
 .campus-tag.sleeping-pose .campus-position { max-width: 116px; font-size: 9px; margin-bottom: 2px; }
 .campus-tag.sleeping-pose { padding: 2px 5px; border-radius: 5px; }
 .campus-tag.sleeping-pose strong { font-size: 9px; }
 .campus-tag.sleeping-pose small { display: none; }
-.campus-tag strong { font-size: 11px; }
-.campus-tag small { display: block; color: #697367; font-size: 9px; margin-top: 2px; max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
+.campus-tag strong { font-size: 10px; }
+.campus-tag small { display: none; color: #697367; font-size: 8px; margin-top: 2px; max-width: 118px; overflow: hidden; text-overflow: ellipsis; }
+.campus-tag.selected small { display:block; }
+.campus-tag:hover,.campus-tag:focus-visible { padding:6px 9px;border-radius:8px;background:#fffef8;z-index:4; }
+.campus-tag:hover .campus-position,.campus-tag:focus-visible .campus-position,.campus-tag:hover small,.campus-tag:focus-visible small { display:block; }
 .campus-tag i { display: inline-block; width: 6px; height: 6px; background: #9aa795; border-radius: 50%; margin-right: 5px; }
 .campus-tag.working i { background: #269368; }.campus-tag.blocked i { background: #c47a46; }.campus-tag.available i { background: #709d9a; }
 .campus-caption { position: absolute; left: 20px; top: 18px; font: 750 11px system-ui; letter-spacing: .12em; color: #35482d; pointer-events: none; }

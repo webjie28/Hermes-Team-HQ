@@ -165,7 +165,7 @@ export class Campus {
     this.box(x,.81,z,2.2,.6,.95,'#b7bc98');this.box(x,1.14,z+.44*facing,2.2,.9,.2,'#b7bc98');for(const dx of [-1,1])this.box(x+dx,1.05,z,.23,.6,1.05,'#a5ae8a')
   }
   makePerson(member) {
-    const tex=this.textureLoader.load(`/workadventure-map/tilesets/characters/${member.profile}.png?v=7`);tex.magFilter=THREE.NearestFilter;tex.minFilter=THREE.NearestFilter;tex.colorSpace=THREE.SRGBColorSpace;tex.repeat.set(1/3,1/4)
+    const tex=this.textureLoader.load(`./workadventure-map/tilesets/characters/${member.profile}.png?v=7`);tex.magFilter=THREE.NearestFilter;tex.minFilter=THREE.NearestFilter;tex.colorSpace=THREE.SRGBColorSpace;tex.repeat.set(1/3,1/4)
     const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,alphaTest:.08}));sprite.scale.set(1.28,1.28,1);this.scene.add(sprite)
     // A separate cropped head lies flat on the pillow, with the body under the duvet.
     const headTex=tex.clone();headTex.repeat.set(1/3,15/128);headTex.offset.set(1/3,1-15/128)
