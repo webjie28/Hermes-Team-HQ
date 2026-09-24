@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+*.sqlite3
+.review-data/
+__pycache__/
+node_modules/
+.DS_Store
+Thumbs.db

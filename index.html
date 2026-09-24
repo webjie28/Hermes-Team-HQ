@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#909b5d">
+  <title>Hermes Team HQ</title>
+  <link rel="stylesheet" href="./styles.css?v=7">
+  <link rel="stylesheet" href="./campus.css?v=13">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">BENJIE'S DEVELOPMENT TEAM</p>
+      <h1>Hermes Team HQ <span class="pulse-dot"></span></h1>
+    </div>
+    <div class="clock-card"><strong id="clock">--:--</strong><span>Asia/Singapore</span></div>
+  </header>
+
+  <nav class="tabs" aria-label="Views">
+    <button class="tab active" data-view="office">Campus</button>
+    <button class="tab" data-view="team">Team & Skills</button>
+    <button class="tab" data-view="board">Board</button>
+    <button id="open-review-desk"><span>Review desk</span><b id="review-pending-count">0</b></button>
+  </nav>
+
+  <main>
+    <section class="metrics" aria-label="Team summary">
+      <article><span>Working now</span><strong id="working-count">0</strong></article>
+      <article><span>Available</span><strong id="available-count">0</strong></article>
+      <article><span>Needs you</span><strong id="blocked-count">0</strong></article>
+      <article class="gateway-card"><span>Hermes gateway</span><strong id="gateway-state">Checking</strong></article>
+    </section>
+
+    <p class="schedule-line"><span class="calendar-icon">▣</span> Developers: Mon–Fri 8 AM–5 PM · Lunch 12–1 PM · two scheduled 30-minute rest breaks · BENJIE & Judith: Mon–Fri 10 PM–8 AM <span id="last-refresh"></span></p>
+
+    <section id="team-view" class="view">
+      <div id="team-grid" class="team-grid"></div>
+    </section>
+
+    <section id="board-view" class="view">
+      <div class="section-heading">
+        <div><p class="eyebrow">SHARED HERMES KANBAN</p><h2>Development board</h2></div>
+        <button id="show-task-form" class="primary">+ Assign task</button>
+      </div>
+      <form id="task-form" class="task-form hidden">
+        <label>Assign to<select id="task-assignee" required></select></label>
+        <label>Task title<input id="task-title" maxlength="180" required placeholder="Example: Draft 3 water-cycle hooks"></label>
+        <label class="wide">Details<textarea id="task-body" rows="3" placeholder="Definition of done, sources, output format..."></textarea></label>
+        <div class="form-actions"><button type="button" id="cancel-task">Cancel</button><button class="primary" type="submit">Create task</button></div>
+      </form>
+      <div id="board-columns" class="board-columns"></div>
+    </section>
+
+    <section id="office-view" class="view active">
+      <div class="office-shell">
+        <div class="office-title"><div><p class="eyebrow">YOUR PEOPLE, ONE PLACE</p><h2>BENJIE Development Campus</h2></div><div class="office-actions"><a href="https://play.workadventu.re/_/benjie-team-hq/localhost:5173/team-hq.tmj" target="_blank" rel="noreferrer">WorkAdventure ↗</a></div></div>
+        <div class="campus-layout">
+          <div id="office-map" class="office-map">
+            <div id="campus-stage" aria-label="Interactive isometric campus"></div>
+            <div id="campus-labels"></div>
+            <div class="campus-caption"><span class="live-indicator"></span> HERMES CAMPUS <small>Live task status · visual routines</small></div>
+            <div class="campus-controls" aria-label="Campus controls">
+              <button id="campus-zoom-in" aria-label="Zoom in">+</button><button id="campus-zoom-out" aria-label="Zoom out">−</button><button id="campus-reset">Reset view</button><button id="campus-tour" aria-pressed="false">Tour campus</button>
+            </div>
+            <div class="campus-hint">Drag to orbit · scroll to zoom · select a teammate</div>
+          </div>
+          <aside id="campus-inspector" class="campus-inspector" aria-label="Selected teammate"></aside>
+        </div>
+        <div id="campus-roster" class="campus-roster" aria-label="Team activity"></div>
+        <p class="campus-footnote">Recorded work comes from Hermes task runs and heartbeats. Shift hours and visual routines do not count as work. Campus: Three.js · character artwork: WorkAdventure/Pipoya.</p>
+        <aside class="office-legend"><span><i class="working"></i>Working</span><span><i class="available"></i>Available</span><span><i class="off_shift"></i>Personal time</span><span><i class="leave"></i>On leave</span><span><i class="blocked"></i>Needs you</span></aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./app.js?v=13"></script>
+</body>
+</html>
