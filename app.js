@@ -4,7 +4,7 @@ import { publicSnapshot } from './public-demo.js?v=3'
 const $$ = (selector) => [...document.querySelectorAll(selector)]
 let snapshot = null
 let campus = null
-import('./campus.js?v=17').then(({ Campus }) => {
+import('./campus.js?v=18').then(({ Campus }) => {
   campus = new Campus()
   if (snapshot) campus.update(snapshot)
 }).catch(error => {
