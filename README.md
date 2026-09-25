@@ -138,3 +138,7 @@ Character sprites are based on assets used by the WorkAdventure map starter ecos
 <div align="center">
 Built for BENJIE's development team.
 </div>
+
+## Zero to Hero promotion trial
+
+Espina is the parent design agent and mentor for Red and Marielle, two recent Computer Science graduates on a 30-day Junior UI/UX apprenticeship from September 25 through October 24, 2026. Promotion is based on weighted quality, completion, first-pass acceptance, evidence, collaboration, and growth. It requires at least eight completed tasks, six reviewed tasks, no unresolved critical defect, Espina's recommendation, and BENJIE's final approval.

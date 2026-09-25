@@ -43,6 +43,7 @@ function memberCard(member) {
     <p class="task-line">${taskText}</p>
     <div class="skill-list">${member.skills.map(skill => `<span>${escapeHtml(skill)}</span>`).join('')}</div>
     <p class="life-line">◷ ${escapeHtml(member.personal)}</p>
+    ${member.mentor?`<p class="life-line">Mentor: ${escapeHtml(member.mentor)} · ${escapeHtml(member.promotion_track || '')}</p>`:''}
     <div class="member-stats"><div><span>Recorded work today</span><strong>${Math.floor((member.recorded_seconds_today || 0) / 3600)}h ${Math.floor((member.recorded_seconds_today || 0) % 3600 / 60)}m</strong></div><div><span>Recorded this week</span><strong>${member.active_hours_week}h</strong></div></div>
     <div class="card-actions">${member.telegram_url?`<a href="${member.telegram_url}" target="_blank" rel="noreferrer">Telegram desk</a>`:''}<button data-leave="${member.profile}">Set leave</button><button data-assign="${member.profile}">Assign task</button></div>
   </article>`
