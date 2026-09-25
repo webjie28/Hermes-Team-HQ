@@ -3,7 +3,7 @@ import * as THREE from './vendor/three.module.js'
 const $ = s => document.querySelector(s)
 const safe = (v = '') => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
 const duration = s => `${Math.floor((s || 0)/3600)}h ${Math.floor((s || 0)%3600/60)}m`
-const positions = { benjie:[-9.25,-6], judith:[-4.25,-6], david:[1.3,-6], jake:[5,-6], ralph:[8.7,-6], rick:[1.3,0], fulton:[5,0], joem:[8.7,0], red:[1.3,5], espina:[5,5], marielle:[8.7,5] }
+const positions = { benjie:[-9.25,-7], judith:[-4.25,-7], david:[1.3,-6], jake:[5,-6], ralph:[8.7,-6], rick:[1.3,0], fulton:[5,0], joem:[8.7,0], red:[-10.3,0], espina:[-6.9,0], marielle:[-3.5,0] }
 const names = Object.keys(positions)
 const meetingSeats = [-18,-16.4,-14.8,-13.2].flatMap(x => [[x,-6.4],[x,-4.2],[x,-2]])
 const diningSeats = [-9.2,-7.5,-5.8,-4.1,-2.4].flatMap(x => [[x,-15.8],[x,-12.6]])
@@ -12,8 +12,8 @@ const diningApproach = index => {const seat=diningSeats[index%diningSeats.length
 const colors = ['#6e9d8b','#a497c6','#89a1ba','#cbad78','#b8a2c4','#86aeb7','#c4978d','#a1ac85']
 const restNames = names.filter(name => !['benjie','judith'].includes(name))
 const beds = {
-  ...Object.fromEntries(restNames.map((name,index) => [name, [3.4+(index%3)*2.75, 10.85+Math.floor(index/3)*2.7]])),
-  benjie:[-.15,12.42], judith:[1.15,12.42]
+  ...Object.fromEntries(restNames.map((name,index) => [name, [.6+(index%5)*2.25, 4.65+Math.floor(index/5)*2.85]])),
+  benjie:[-9.35,-2.85], judith:[-9.35,-1.95]
 }
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -83,11 +83,12 @@ export class Campus {
     this.box(x+.93,.5,z-.68,.23,.8,.5,'#c3aa89')
   }
   queenBed(x,z) {
-    this.box(x,.38,z,3.55,.55,3.55,'#9b8065');this.box(x,.76,z,3.38,.25,3.36,'#f2eee2')
-    this.box(x,.98,z+.42,3.36,.18,1.86,'#91a99b');this.box(x,.84,z-1.7,3.7,1.45,.15,'#ab9275')
-    this.box(x-.8,.96,z-1.12,1.35,.18,.72,'#fff8e8');this.box(x+.8,.96,z-1.12,1.35,.18,.72,'#fff8e8')
-    this.box(x,.99,z-.48,3.36,.04,.32,'#dbe5dc');this.box(x+2,.5,z-1.15,.45,.8,.7,'#c2a483')
-    this.cylinder(x+2,.98,z-1.15,.18,.35,'#eee6ce');this.sign('BENJIE + JUDITH | QUEEN BED',x,1.72,z+1.73,3.2,'#6d7e7c')
+    // Headboard west, feet east: the long side runs horizontally along the office wall.
+    this.box(x,.38,z,3.9,.55,2.2,'#9b8065');this.box(x,.76,z,3.72,.25,2.06,'#f2eee2')
+    this.box(x+.48,.98,z,2.45,.18,2.04,'#91a99b');this.box(x-1.9,.84,z,.15,1.45,2.3,'#ab9275')
+    for(const dz of [-.45,.45])this.box(x-1.35,.96,z+dz,.7,.18,.8,'#fff8e8')
+    this.box(x-.72,.99,z,.25,.04,2.04,'#dbe5dc')
+    this.sign('BENJIE + JUDITH | QUEEN BED',x,1.25,z+1.12,3.2,'#6d7e7c')
   }
   buildCampus() {
     this.box(0,-.35,0,48,.5,38,'#a6b579')
@@ -158,15 +159,14 @@ export class Campus {
     this.box(-16.7,.55,5.05,2.5,.18,.72,'#9a795c');this.box(-16.7,.55,7.35,2.5,.18,.72,'#9a795c')
     this.box(-16.7,.72,6.2,1.35,.18,.9,'#81715f');this.cylinder(-15.55,.72,6.2,.18,.72,'#555c56');this.cylinder(-15.55,1.1,6.2,.32,.08,'#3f4741')
     this.box(-2.3,1.1,4.1,1,.13,.7,'#d6c5a6');this.box(-2.3,1.4,4.1,.47,.52,.4,'#4b554d')
-    // Enclosed quiet wing keeps nine staff beds and the owners' queen suite inside the building.
-    this.box(5.1,.3,13.1,12.8,.25,7.5,'#d8ddd2');this.box(5.1,.85,16.85,12.8,1,.16,'#e9e3d4');this.box(11.5,.8,13.1,.16,.9,7.5,'#e9e3d4')
-    this.box(-1.3,.85,13.1,.16,1,7.5,'#e9e3d4');this.box(2.1,.72,9.38,6.8,.7,.16,'#e9e3d4');this.box(9.2,.72,9.38,4.6,.7,.16,'#e9e3d4')
-    this.box(2.05,.78,14.65,.14,.95,4.4,'#e9e3d4');this.box(2.05,.78,10.05,.14,.95,1.3,'#e9e3d4')
+    // Staff sleep inside the former specialist room; the outdoor annex is removed.
+    this.box(5.2,.46,6.2,11.9,.035,5.7,'#d8ddd2')
+    this.box(3.85,.92,3.3,9.1,.95,.16,'#e9e3d4');this.box(11,.92,3.3,.8,.95,.16,'#e9e3d4')
     for(const name of names)this.desk(name,...positions[name])
     for(const [index,name] of restNames.entries())this.bed(name,...beds[name],names.indexOf(name))
-    this.queenBed(.5,13.2)
+    this.queenBed(-8,-2.4)
     this.sign('BENJIE + JUDITH | PRIVATE OFFICE',-7,3.25,-9.12,7.8);this.sign('THE DEVELOPMENT STUDIO',3.9,3.25,-9.12,6.2)
-    this.sign('GYM & RECOVERY',-9,1.5,3.5,3.2);this.sign('COFFEE LOUNGE',-3.6,1.5,3.5,3.2);this.sign('MEETING ROOM | OPEN DOOR | 12 SEATS',-15.6,1.5,-.65,6.4);this.sign('SPECIALIST WING',5.2,1.3,3.5,3.7,'#6d7e7c');this.sign('REST WING | 9 STAFF BEDS + PRIVATE QUEEN',5.1,1.5,16.7,7.2,'#6d7e7c');this.sign('SMOKING AREA',-16.7,2.58,6.2,3.8,'#62695e')
+    this.sign('GYM & RECOVERY',-9,1.5,3.5,3.2);this.sign('COFFEE LOUNGE',-3.6,1.5,3.5,3.2);this.sign('MEETING ROOM | OPEN DOOR | 12 SEATS',-15.6,1.5,-.65,6.4);this.sign('QUIET HOURS | 9 STAFF BEDS',5.2,1.3,9.3,5,'#6d7e7c');this.sign('SMOKING AREA',-16.7,2.58,6.2,3.8,'#62695e')
     for(const x of [-18.5,-14.9])this.box(x,1,8.5,.09,2,.09,'#62695e')
     this.sign('BENJIE CREATIVE CAMPUS',-7,1.3,11,5.3);for(const x of [-9,-5])this.box(x,.6,11,.08,1.2,.09,'#647151')
     for(const [x,z] of [[-11.8,-8.3],[-2.3,-8.3],[10.5,-8.3],[10.5,1.2],[-11.8,1.2],[.3,8.8]])this.plant(x,z)
@@ -292,7 +292,7 @@ export class Campus {
       p.tex.offset.set(frame/3,1-(Math.floor(direction/3)+1)/4)
       const seated=['walk','break','lounge','dining','meeting'].includes(p.mode)&&!walking
       p.sprite.position.set(p.x,seated ? 1.02 : p.mode==='desk'&&!walking ? 1.56 : 1.28,p.z);p.sprite.scale.set(1.72,seated ? 1.18 : 1.72,1);p.sprite.visible=!['sleep','leave'].includes(p.mode)
-      p.head.visible=p.mode==='sleep';const [bx,bz]=beds[p.member.profile];p.head.position.set(bx,1.04,bz-.78)
+      p.head.visible=p.mode==='sleep';const [bx,bz]=beds[p.member.profile];const owner=['benjie','judith'].includes(p.member.profile);p.head.position.set(bx,1.08,bz-(owner?0:.78));p.head.rotation.z=owner?-Math.PI/2:0
       // Keep the floating tag above the full sprite so the agent and animation stay visible.
       const anchor=new THREE.Vector3(p.x,p.mode==='sleep'?1.45:3.15,p.z+(p.mode==='sleep'?1.3:0)).project(this.camera);const stage=$('#office-map');const x=(anchor.x*.5+.5)*stage.clientWidth,y=(-anchor.y*.5+.5)*stage.clientHeight
       p.tag.style.display=p.mode==='leave'||Math.abs(anchor.x)>1||Math.abs(anchor.y)>1?'none':''
