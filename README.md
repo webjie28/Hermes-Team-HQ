@@ -4,14 +4,14 @@
 
 ### A living virtual office for an AI-assisted development team
 
-[![GitHub Pages](https://img.shields.io/github/actions/workflow/status/webjie28/MY-PERSONAL-TEAM-AGENT/pages.yml?label=live%20site&style=flat-square)](https://webjie28.github.io/MY-PERSONAL-TEAM-AGENT/)
+[![Vercel](https://img.shields.io/badge/live%20site-Vercel-000?style=flat-square&logo=vercel)](https://hermes-team-hq.vercel.app/)
 ![Three.js](https://img.shields.io/badge/Three.js-isometric%20campus-222?style=flat-square)
 ![Privacy](https://img.shields.io/badge/public%20build-read--only-35664d?style=flat-square)
 ![JavaScript](https://img.shields.io/badge/JavaScript-61.7%25-F7DF1E?style=flat-square&logo=javascript&logoColor=111)
 ![CSS](https://img.shields.io/badge/CSS-32.2%25-663399?style=flat-square&logo=css&logoColor=fff)
 ![HTML](https://img.shields.io/badge/HTML-6.1%25-E34F26?style=flat-square&logo=html5&logoColor=fff)
 
-**[Open the live campus →](https://webjie28.github.io/MY-PERSONAL-TEAM-AGENT/)**
+**[Open the live campus →](https://hermes-team-hq.vercel.app/)**
 
 </div>
 
