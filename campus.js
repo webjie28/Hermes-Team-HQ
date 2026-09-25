@@ -10,7 +10,11 @@ const diningSeats = [-9.2,-7.5,-5.8,-4.1,-2.4,-.7].flatMap(x => [[x,-15.8],[x,-1
 const diningEntry = [-1.05,-11.1]
 const diningApproach = index => [diningEntry,[-1.05,index%2===0 ? -17 : -11.1],[diningSeats[index][0],index%2===0 ? -17 : -11.1],diningSeats[index]]
 const colors = ['#6e9d8b','#a497c6','#89a1ba','#cbad78','#b8a2c4','#86aeb7','#c4978d','#a1ac85']
-const beds = Object.fromEntries(names.map((n,i) => [n, [.5+(i%6)*1.8, 11.2+Math.floor(i/6)*3.05]]))
+const restNames = names.filter(name => !['benjie','judith'].includes(name))
+const beds = {
+  ...Object.fromEntries(restNames.map((name,index) => [name, [1.15+(index%5)*2.05, 11.35+Math.floor(index/5)*3.05]])),
+  benjie:[-9.6,-2.8], judith:[-8,-2.8]
+}
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export class Campus {
@@ -80,6 +84,13 @@ export class Campus {
     this.box(x,.94,z-.76,1.12,.16,.56,'#fff9e7');this.box(x,.93,z+.35,1.47,.15,1.53,colors[i]);this.box(x,1.02,z-.27,1.47,.04,.28,'#d5dfd0')
     this.box(x+.93,.5,z-.68,.23,.8,.5,'#c3aa89')
   }
+  queenBed(x,z) {
+    this.box(x,.38,z,3.55,.55,3.55,'#9b8065');this.box(x,.76,z,3.38,.25,3.36,'#f2eee2')
+    this.box(x,.98,z+.42,3.36,.18,1.86,'#91a99b');this.box(x,.84,z-1.7,3.7,1.45,.15,'#ab9275')
+    this.box(x-.8,.96,z-1.12,1.35,.18,.72,'#fff8e8');this.box(x+.8,.96,z-1.12,1.35,.18,.72,'#fff8e8')
+    this.box(x,.99,z-.48,3.36,.04,.32,'#dbe5dc');this.box(x+2,.5,z-1.15,.45,.8,.7,'#c2a483')
+    this.cylinder(x+2,.98,z-1.15,.18,.35,'#eee6ce');this.sign('BENJIE + JUDITH | QUEEN BED',x,1.72,z+1.73,3.2,'#6d7e7c')
+  }
   buildCampus() {
     this.box(0,-.35,0,48,.5,38,'#a6b579')
     // Street, pavement, parking and garden form a real exterior around the cutaway.
@@ -137,19 +148,26 @@ export class Campus {
     this.box(-19.3,1.1,-4.2,.18,1.5,6.8,'#eee5d4')
     this.box(-15.6,.95,-.8,7.4,1.2,.18,'#eee5d4')
     this.box(-11.9,1.1,-6,.18,1.5,3.2,'#eee5d4');this.box(-11.9,1.1,-1.5,.18,1.5,1.4,'#eee5d4')
-    this.box(-12.5,1.25,-3.9,1.2,2,.12,'#977b58')
+    // The east wall has a full open doorway; no door slab blocks circulation.
+    this.box(-12.02,.08,-3.3,.32,.08,1.85,'#d5c5a9')
     this.box(-15.6,1,-4.2,5.6,.18,1.7,'#927454')
     for(const [x,z] of meetingSeats)this.chair(x,z)
     this.box(-15.6,2.15,-7.45,3.5,1.8,.12,'#222b2e');this.box(-15.6,2.15,-7.37,3.3,1.6,.02,'#355c65')
     this.sign('MONDAY 09:00 | TEAM SYNC',-15.6,2.15,-7.34,3.1)
-    // Outdoor smoking area stays away from entrances and food areas.
-    this.box(-16.7,.08,6.2,3.8,.1,4.2,'#9ca18f');this.box(-17,.58,6.2,1.1,.18,2.7,'#8a755e');this.cylinder(-15.8,.75,7.2,.18,.65,'#555c56');this.cylinder(-15.8,1.1,7.2,.32,.08,'#3f4741')
+    // Outdoor smoking area: paved, signed, covered, and clearly separated from the building.
+    this.box(-16.7,.08,6.2,4.4,.12,4.5,'#9ca18f');this.box(-16.7,2.45,6.2,4.4,.12,4.5,'#c7bea3')
+    for(const [x,z] of [[-18.65,4.2],[-14.75,4.2],[-18.65,8.2],[-14.75,8.2]])this.box(x,1.25,z,.1,2.5,.1,'#59645d')
+    this.box(-16.7,.55,5.05,2.5,.18,.72,'#9a795c');this.box(-16.7,.55,7.35,2.5,.18,.72,'#9a795c')
+    this.box(-16.7,.72,6.2,1.35,.18,.9,'#81715f');this.cylinder(-15.55,.72,6.2,.18,.72,'#555c56');this.cylinder(-15.55,1.1,6.2,.32,.08,'#3f4741')
     this.box(-2.3,1.1,4.1,1,.13,.7,'#d6c5a6');this.box(-2.3,1.4,4.1,.47,.52,.4,'#4b554d')
-    // Expanded quiet wing gives all eleven people dedicated rest space without crowding the new desks.
+    // Enclosed quiet wing gives the nine daytime specialists dedicated rest space.
     this.box(5.1,.3,13.1,12.8,.25,7.5,'#d8ddd2');this.box(5.1,.85,16.85,12.8,1,.16,'#e9e3d4');this.box(11.5,.8,13.1,.16,.9,7.5,'#e9e3d4')
-    for(const [i,name] of names.entries()) {this.desk(name,...positions[name]);this.bed(name,...beds[name],i)}
+    this.box(-1.3,.85,13.1,.16,1,7.5,'#e9e3d4');this.box(2.1,.72,9.38,6.8,.7,.16,'#e9e3d4');this.box(9.2,.72,9.38,4.6,.7,.16,'#e9e3d4')
+    for(const name of names)this.desk(name,...positions[name])
+    for(const [index,name] of restNames.entries())this.bed(name,...beds[name],names.indexOf(name))
+    this.queenBed(-8.8,-2.8)
     this.sign('BENJIE + JUDITH | PRIVATE OFFICE',-7,3.25,-9.12,7.8);this.sign('THE DEVELOPMENT STUDIO',3.9,3.25,-9.12,6.2)
-    this.sign('GYM & RECOVERY',-9,1.5,3.5,3.2);this.sign('COFFEE LOUNGE',-3.6,1.5,3.5,3.2);this.sign('MEETING ROOM | 12 SEATS',-15.6,1.5,-.65,5);this.sign('SPECIALIST WING',5.2,1.3,3.5,3.7,'#6d7e7c');this.sign('QUIET HOURS | 11 BEDS',5.1,1.5,16.7,5,'#6d7e7c');this.sign('SMOKING AREA',-16.7,2.1,8.5,4.2,'#62695e')
+    this.sign('GYM & RECOVERY',-9,1.5,3.5,3.2);this.sign('COFFEE LOUNGE',-3.6,1.5,3.5,3.2);this.sign('MEETING ROOM | OPEN DOOR | 12 SEATS',-15.6,1.5,-.65,6.4);this.sign('SPECIALIST WING',5.2,1.3,3.5,3.7,'#6d7e7c');this.sign('QUIET HOURS | 9 BEDS',5.1,1.5,16.7,5,'#6d7e7c');this.sign('SMOKING AREA',-16.7,2.58,6.2,3.8,'#62695e')
     for(const x of [-18.5,-14.9])this.box(x,1,8.5,.09,2,.09,'#62695e')
     this.sign('BENJIE CREATIVE CAMPUS',-7,1.3,11,5.3);for(const x of [-9,-5])this.box(x,.6,11,.08,1.2,.09,'#647151')
     for(const [x,z] of [[-11.8,-8.3],[-2.3,-8.3],[10.5,-8.3],[10.5,1.2],[-11.8,1.2],[.3,8.8]])this.plant(x,z)

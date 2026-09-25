@@ -28,7 +28,7 @@ The public site is a safe, read-only showcase. BENJIE's private localhost dashbo
 ## Inside the campus
 
 - Interactive isometric office rendered with Three.js
-- Individual workstations, meeting room, lounge, dining area, gym, smoking area, and rest quarters
+- Individual workstations, a 12-seat meeting room with an open doorway, lounge, dining area, gym, covered smoking area, nine-bed staff rest wing, and a private queen bed for BENJIE and Judith
 - Seven specialist profiles with roles, skills, active assignments, and work-time summaries
 - Team and skills directory
 - Shared development board
