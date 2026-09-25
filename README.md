@@ -142,3 +142,7 @@ Built for BENJIE's development team.
 ## Zero to Hero promotion trial
 
 Espina is the parent design agent and mentor for Red and Marielle, two recent Computer Science graduates on a 30-day Junior UI/UX apprenticeship from September 25 through October 24, 2026. Promotion is based on weighted quality, completion, first-pass acceptance, evidence, collaboration, and growth. It requires at least eight completed tasks, six reviewed tasks, no unresolved critical defect, Espina's recommendation, and BENJIE's final approval.
+
+## Project operating cadence
+
+Each new project receives an isolated workspace and Kanban board, a written business-day estimate, named owners and dependencies, daily evidence updates, recorded meeting notes, required documents, QA/security gates, release and rollback instructions, and final approval by BENJIE. The public site displays a safe read-only preview; private task content and approval records stay local.

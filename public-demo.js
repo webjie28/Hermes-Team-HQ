@@ -11,6 +11,21 @@ const people = [
   ['marielle','Marielle','Junior UI/UX Designer','Trainee · Zero to Hero','#4f8295',['Figma learning','User flows','HTML/CSS','Usability checks','Design QA'],'Mentor: Espina · 30-day trial'],
 ]
 
+function singaporeShift(shift) {
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone:'Asia/Singapore', weekday:'short', hour:'2-digit', minute:'2-digit', hourCycle:'h23' })
+    .formatToParts(new Date()).reduce((all,part)=>(all[part.type]=part.value,all),{})
+  const weekdays = ['Mon','Tue','Wed','Thu','Fri']
+  const hour = Number(parts.hour), minute = Number(parts.minute), clock = hour * 60 + minute
+  if (shift === 'night') {
+    const todayStarts = weekdays.includes(parts.weekday) && clock >= 22 * 60
+    const previousStarts = ['Tue','Wed','Thu','Fri','Sat'].includes(parts.weekday) && clock < 8 * 60
+    const rest = (clock >= 90 && clock < 120) || (clock >= 330 && clock < 360)
+    return {on:(todayStarts || previousStarts) && !rest,label:rest?'Rest break':todayStarts||previousStarts?'Night shift':'Off shift'}
+  }
+  const on = weekdays.includes(parts.weekday) && clock >= 8*60 && clock < 17*60 && !(clock >= 12*60 && clock < 13*60)
+  return {on,label:on?'Day shift':'Off shift'}
+}
+
 export function publicSnapshot() {
   const tasks = [
     {id:'public-1',assignee:'david',status:'review',title:'Product brief and acceptance criteria'},
@@ -24,20 +39,24 @@ export function publicSnapshot() {
     {id:'public-9',assignee:'marielle',status:'todo',title:'Week 1 user-flow and accessibility QA exercise'},
   ]
   const current = Object.fromEntries(tasks.map(task=>[task.assignee,task]))
-  const members = people.map(([profile,name,role,level,color,skills,personal], index) => ({
-    profile,name,role,level,color,skills,personal,gender:['judith','marielle'].includes(profile)?'female':'male',shift:profile==='judith'?'night':'day',
+  const members = people.map(([profile,name,role,level,color,skills,personal], index) => {
+    const shift = profile==='judith'?'night':'day', shiftState = singaporeShift(shift)
+    return ({
+    profile,name,role,level,color,skills,personal,gender:['judith','marielle'].includes(profile)?'female':'male',shift,
     mentor:['red','marielle'].includes(profile)?'Espina':null,
     promotion_track:['red','marielle'].includes(profile)?'30-day trial · ends Oct 24':null,
     children:profile==='espina'?['Red','Marielle']:null,
     shift_label:profile==='judith'?'Night shift · 10:00 PM–8:00 AM':'Day shift · 8:00 AM–5:00 PM',
-    state:current[profile]?.status==='running'?'working':current[profile]?.status==='review'?'review':'available',
-    state_label:current[profile]?.status==='running'?'Working':current[profile]?.status==='review'?'In review':'Available',
+    state:current[profile]?.status==='running'?'working':current[profile]?.status==='review'?'review':shiftState.on?'available':'off_shift',
+    state_label:current[profile]?.status==='running'?'Working':current[profile]?.status==='review'?'In review':shiftState.on?'Available':'Off shift',
     current_task:current[profile]||null,recorded_seconds_today:(index+2)*1560,recorded_seconds_week:(index+3)*9180,
     active_hours_week:Number((((index+3)*9180)/3600).toFixed(1)),activity:'desk',activity_label:'At workstation',
-    activity_source:'Public preview',completed_tasks:index,on_shift:true,on_leave:false,
+    activity_source:'Public preview',completed_tasks:index,on_shift:shiftState.on,on_leave:false,
     task_elapsed_seconds:current[profile]?.status==='running'?3600+index*600:null,
-  }))
+  })})
+  const managerShift = singaporeShift('night')
   return {public_preview:true,now:new Date().toISOString(),timezone:'Asia/Singapore',
-    manager:{name:'BENJIE',title:'Founder & Hermes Main',on_shift:true,activity:'desk',activity_label:'Reviewing the team',activity_source:'Public preview'},
-    gateway:{state:'preview',telegram:'private'},summary:{working:members.filter(m=>m.state==='working').length,available:members.filter(m=>m.state==='available').length,needs_help:0,on_shift:members.length},members,tasks}
+    manager:{name:'BENJIE',title:'Founder & Hermes Main',on_shift:managerShift.on,activity:managerShift.on?'desk':'sleep',activity_label:managerShift.on?'Reviewing the team':'Off shift',activity_source:'Public preview'},
+    project:{name:'Awaiting next project intake',slug:'project-intake',plan:null},
+    gateway:{state:'preview',telegram:'private'},summary:{working:members.filter(m=>m.state==='working').length,available:members.filter(m=>m.state==='available').length,needs_help:0,on_shift:members.filter(m=>m.on_shift).length},members,tasks}
 }

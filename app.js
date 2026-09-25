@@ -78,6 +78,10 @@ const groups = [
 ]
 
 function renderBoard() {
+  const plan = snapshot.project?.plan
+  $('#project-summary').textContent = plan
+    ? `${snapshot.project.name} · ${plan.estimate.business_days} business days · target ${plan.estimate.target_finish}`
+    : `${snapshot.project?.name || 'No active project'} · waiting for an approved project plan`
   $('#board-columns').innerHTML = groups.map(([label, states]) => {
     const tasks = snapshot.tasks.filter(task => states.includes(task.status)).slice(0, 15)
     return `<section class="board-column"><h3>${label} · ${tasks.length}</h3>${tasks.length ? tasks.map(task => {
