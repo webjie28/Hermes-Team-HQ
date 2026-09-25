@@ -76,18 +76,18 @@ Assigned → Agent works → Tests and report → Approval inbox
                                               └─ Instruct
 ```
 
-“24/7 inbox” means the queue is durable and can receive reports while the Hermes processes and computer are running. It does not claim that agents keep executing while the host computer is powered off. The public GitHub Pages site stays read-only and never exposes the private approval ledger.
+“24/7 inbox” means the queue is durable. The current local runtime keeps working while the host computer is running; the planned Google Cloud VM will keep the private gateway online when that computer is off. The public Vercel site stays read-only and never exposes the private approval ledger.
 
 ## Architecture
 
 ```text
-Public GitHub Pages              Private localhost
-──────────────────              ─────────────────
+Public Vercel site               Private Hermes runtime
+──────────────────              ──────────────────────
 Read-only preview data           Live Hermes status
 Three.js campus                  Telegram topic links
 Team / skills / board UI         Task assignment
 No credentials                   Approval ledger
-No write-capable API             Local filesystem access
+No write-capable API             Gmail and A2A gateways
 ```
 
 This separation prevents a public static site from becoming an exposed administration panel.
@@ -101,7 +101,8 @@ This separation prevents a public static site from becoming an exposed administr
 | Campus rendering | Three.js + WebGL | Isometric office, rooms, furniture, movement, camera controls |
 | Characters | WorkAdventure/Pipoya-compatible sprites | Standing, walking, working, resting, and personal-routine states |
 | Private control plane | Python + SQLite | Local API, Hermes status aggregation, durable approval ledger |
-| Delivery | GitHub Actions + GitHub Pages | Automated read-only public deployment |
+| Delivery | GitHub + Vercel | Automated read-only public deployment on every push to `main` |
+| Agent communication | A2A JSON-RPC 2.0 | Agent Cards, durable context IDs, parent-child delegation, and task state history |
 
 GitHub's language panel is generated automatically from tracked source files. The README badges mirror the current repository mix shown by GitHub: JavaScript 61.7%, CSS 32.2%, and HTML 6.1%. Python powers the private localhost control plane and is intentionally excluded from the public static build.
 
@@ -117,7 +118,11 @@ Open `http://localhost:8080`. Opening `index.html` directly is not supported bec
 
 ## Deployment
 
-Every push to `main` deploys through the included GitHub Pages workflow. The workflow requires no repository secrets.
+Every push to `main` deploys automatically to [Vercel](https://hermes-team-hq.vercel.app/). The public build requires no repository secrets.
+
+## A2A agent network
+
+The private Hermes gateway exposes one localhost-only A2A listener on port `9900`. Espina is the parent reviewer; Red and Marielle are child agents. Their canonical Agent Card routes are `/espina`, `/red`, and `/marielle`. Tasks retain a context ID and move through A2A task states before Espina's review and BENJIE's final approval. The agents cannot self-approve deployment, credential, purchase, or promotion decisions.
 
 ## Security and privacy
 
