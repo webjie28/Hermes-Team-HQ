@@ -1,10 +1,12 @@
 const $ = (selector) => document.querySelector(selector)
-import { updateReviewMembers } from './review-ui.js?v=14'
-import { publicSnapshot } from './public-demo.js?v=3'
+import { updateReviewMembers } from './review-ui.js'
+import { promotionLabel, teamSignature } from './ui-state.js'
+import { publicSnapshot } from './public-demo.js'
 const $$ = (selector) => [...document.querySelectorAll(selector)]
 let snapshot = null
 let campus = null
-import('./campus.js?v=19').then(({ Campus }) => {
+let lastTeamSignature = null
+import('./campus.js').then(({ Campus }) => {
   campus = new Campus()
   if (snapshot) campus.update(snapshot)
 }).catch(error => {
@@ -37,7 +39,7 @@ function memberCard(member) {
   const taskText = task
     ? `<strong>${escapeHtml(task.status)}</strong> · ${escapeHtml(task.title)}`
     : 'No assigned task. Ready for work.'
-  return `<article class="member-card" style="--member-color:${member.color}">
+  return `<article class="member-card" data-profile="${member.profile}" style="--member-color:${member.color}">
     <div class="member-top"><div class="avatar">${member.name.slice(0, 1)}</div><div><h3 class="member-name">${member.name}</h3><p class="member-role">${escapeHtml(member.role)} · ${escapeHtml(member.level)}</p></div></div>
     <div class="status-pill ${member.state}">${member.state_label}</div>
     <p class="task-line">${taskText}</p>
@@ -50,9 +52,17 @@ function memberCard(member) {
 }
 
 function renderTeam() {
+  for (const member of snapshot.members) if (['red','marielle'].includes(member.profile)) member.promotion_track = promotionLabel(member.trial_start, member.trial_days)
+  const signature = teamSignature(snapshot.members, Boolean(snapshot.public_preview))
+  if (signature === lastTeamSignature) return
+  lastTeamSignature = signature
+  const active = document.activeElement
+  const focusProfile = active?.closest('.member-card')?.dataset.profile
+  const focusText = active?.textContent
   $('#team-grid').innerHTML = snapshot.members.map(memberCard).join('')
-  document.querySelectorAll('.member-card').forEach((card,index)=>{const b=document.createElement('button');b.textContent='Review work & access';b.onclick=()=>document.dispatchEvent(new CustomEvent('worker-review',{detail:snapshot.members[index].profile}));card.querySelector('.card-actions').prepend(b)})
+  if (!snapshot.public_preview) document.querySelectorAll('.member-card').forEach((card,index)=>{const b=document.createElement('button');b.textContent='Review work & access';b.onclick=()=>document.dispatchEvent(new CustomEvent('worker-review',{detail:snapshot.members[index].profile}));card.querySelector('.card-actions').prepend(b)})
   if(snapshot.public_preview) document.querySelectorAll('[data-leave],[data-assign]').forEach(button=>button.disabled=true)
+  if (focusProfile) [...document.querySelectorAll('.member-card')].find(card=>card.dataset.profile===focusProfile)?.querySelectorAll('button,a').forEach(button=>{if(button.textContent===focusText) button.focus({preventScroll:true})})
   $$('[data-assign]').forEach(button => button.addEventListener('click', () => openTaskForm(button.dataset.assign)))
   $$('[data-leave]').forEach(button => button.addEventListener('click', () => setLeave(button.dataset.leave)))
 }
@@ -82,6 +92,8 @@ function renderBoard() {
   $('#project-summary').textContent = plan
     ? `${snapshot.project.name} · ${plan.estimate.business_days} business days · target ${plan.estimate.target_finish}`
     : `${snapshot.project?.name || 'No active project'} · waiting for an approved project plan`
+  const milestones = plan?.milestones || []
+  $('#project-process').innerHTML = milestones.length ? `<div class="process-heading"><div><span>Visible delivery process</span><strong>${escapeHtml(plan.estimate.start)} → ${escapeHtml(plan.estimate.target_finish)}</strong></div><p>Every gate requires evidence. Production stays locked until BENJIE approves.</p></div><div class="process-grid">${milestones.map((item,index)=>`<article class="process-card"><span class="process-number">${index+1}</span><div><small>Days ${escapeHtml(item.days)} · ${escapeHtml(item.dates)}</small><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml((item.owners||[]).join(' · '))}</p><b>Gate: ${escapeHtml(item.gate)}</b></div></article>`).join('')}</div>` : ''
   $('#board-columns').innerHTML = groups.map(([label, states]) => {
     const tasks = snapshot.tasks.filter(task => states.includes(task.status)).slice(0, 15)
     return `<section class="board-column"><h3>${label} · ${tasks.length}</h3>${tasks.length ? tasks.map(task => {
@@ -97,7 +109,20 @@ function renderHeader() {
   $('#blocked-count').textContent = snapshot.summary.needs_help
   const healthy = snapshot.gateway.state === 'running' && snapshot.gateway.telegram === 'connected'
   $('#gateway-state').textContent = snapshot.public_preview ? 'Public preview' : healthy ? 'Connected' : `${snapshot.gateway.state} / ${snapshot.gateway.telegram}`
-  $('#last-refresh').textContent = `Updated ${new Date(snapshot.now).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`
+  $('#last-refresh').textContent = snapshot.now ? `Updated ${new Date(snapshot.now).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : 'Live backend unavailable · no verified status'
+}
+
+function renderPersonalOps() {
+  const ops = snapshot.personal_ops
+  const root = $('#personal-ops')
+  root.hidden = !ops?.agent
+  if (!ops?.agent) { root.innerHTML = ''; return }
+  const sources = Object.entries(ops.sources || {})
+  const agentStatus = escapeHtml((ops.agent.status || 'unknown').replaceAll('_',' '))
+  const evidenceReady = Object.values(ops.evidence || {}).filter(Boolean).length
+  const evidenceTotal = Object.keys(ops.evidence || {}).length
+  const stages = [['O','Observe','Auditor'],['O','Orient','Analyst'],['D','Decide','Planner'],['A','Act','Operator']]
+  root.innerHTML = `<div class="ops-intro"><p class="eyebrow">PERSONAL OODA REPORTER</p><h2>${escapeHtml(ops.agent.name)} · ${escapeHtml(ops.agent.role)}</h2><p><strong>${agentStatus}</strong> · Local evidence ${evidenceReady}/${evidenceTotal}. External actions stay approval-gated.</p><div class="ooda-loop">${stages.map(([letter,key,role])=>`<article><b>${letter}</b><span>${key}</span><small>${role}</small></article>`).join('')}</div>${ops.focus?`<div class="ops-focus"><span>One workflow<br><strong>${escapeHtml(ops.focus.workflow)}</strong></span><span>One market<br><strong>${escapeHtml(ops.focus.market)}</strong></span><span>One recurring pain<br><strong>${escapeHtml(ops.focus.recurring_user_pain)}</strong></span></div>`:''}</div><div class="ops-sources">${sources.map(([key,value])=>`<article><span>${escapeHtml(key.replaceAll('_',' '))}</span><strong class="${value.status==='connected'?'connected':'pending'}">${escapeHtml(value.status.replaceAll('_',' '))}</strong><small>${value.last_successful_sync?`Last sync: ${escapeHtml(value.last_successful_sync)}`:'No verified sync yet'}</small></article>`).join('')}</div>`
 }
 
 function populateAssignees() {
@@ -109,12 +134,15 @@ async function refresh() {
     const response = await fetch('/api/status', { cache: 'no-store' })
     if (!response.ok) throw new Error(`Status ${response.status}`)
     snapshot = await response.json()
+    document.body.classList.toggle('public-preview', Boolean(snapshot.public_preview))
+    $('#open-review-desk').hidden = Boolean(snapshot.public_preview)
     updateReviewMembers(snapshot.members)
-    renderHeader(); renderTeam(); renderBoard(); campus?.update(snapshot); populateAssignees()
+    renderHeader(); renderPersonalOps(); renderTeam(); renderBoard(); campus?.update(snapshot); populateAssignees()
   } catch (error) {
     snapshot = publicSnapshot()
+    $('#open-review-desk').hidden = true
     updateReviewMembers(snapshot.members)
-    renderHeader(); renderTeam(); renderBoard(); campus?.update(snapshot); populateAssignees()
+    renderHeader(); renderPersonalOps(); renderTeam(); renderBoard(); campus?.update(snapshot); populateAssignees()
     document.body.classList.add('public-preview')
   }
 }
@@ -125,10 +153,22 @@ function openTaskForm(profile) {
   $('#task-title').focus()
 }
 
-$$('.tab').forEach(tab => tab.addEventListener('click', () => {
-  $$('.tab').forEach(item => item.classList.toggle('active', item === tab))
-  $$('.view').forEach(view => view.classList.toggle('active', view.id === `${tab.dataset.view}-view`))
-}))
+function activateTab(tab, focus = false) {
+  $$('.tab').forEach(item => {
+    const selected = item === tab
+    item.classList.toggle('active', selected)
+    item.setAttribute('aria-selected', String(selected)); item.tabIndex = selected ? 0 : -1
+  })
+  $$('.view').forEach(view => {const selected = view.id === `${tab.dataset.view}-view`; view.classList.toggle('active', selected); view.hidden = !selected})
+  if (focus) tab.focus()
+}
+$$('.tab').forEach((tab,index,tabs) => {
+  tab.addEventListener('click', () => activateTab(tab))
+  tab.addEventListener('keydown', event => {
+    const target = {ArrowRight:(index+1)%tabs.length,ArrowLeft:(index+tabs.length-1)%tabs.length,Home:0,End:tabs.length-1}[event.key]
+    if (target !== undefined) {event.preventDefault();activateTab(tabs[target], true)}
+  })
+})
 
 $('#show-task-form').addEventListener('click', () => openTaskForm())
 $('#cancel-task').addEventListener('click', () => $('#task-form').classList.add('hidden'))

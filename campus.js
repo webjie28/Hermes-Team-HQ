@@ -3,17 +3,17 @@ import * as THREE from './vendor/three.module.js'
 const $ = s => document.querySelector(s)
 const safe = (v = '') => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
 const duration = s => `${Math.floor((s || 0)/3600)}h ${Math.floor((s || 0)%3600/60)}m`
-const positions = { benjie:[-9.25,-7], judith:[-4.25,-7], david:[1.3,-6], jake:[5,-6], ralph:[8.7,-6], rick:[1.3,0], fulton:[5,0], joem:[8.7,0], red:[-10.3,0], espina:[-6.9,0], marielle:[-3.5,0] }
+const positions = { benjie:[-9.25,-7], judith:[-4.25,-7], david:[1.3,-6], jake:[5,-6], ralph:[8.7,-6], rick:[1.3,0], fulton:[5,0], joem:[8.7,0], red:[-10.3,0], espina:[-6.9,0], marielle:[-3.5,0], dayao:[4.4,-15.6] }
 const names = Object.keys(positions)
 const meetingSeats = [-18,-16.4,-14.8,-13.2].flatMap(x => [[x,-6.4],[x,-4.2],[x,-2]])
 const diningSeats = [-9.2,-7.5,-5.8,-4.1,-2.4].flatMap(x => [[x,-15.8],[x,-12.6]])
 const diningEntry = [-1.05,-11.1]
 const diningApproach = index => {const seat=diningSeats[index%diningSeats.length];return [diningEntry,[-1.05,index%2===0 ? -17 : -11.1],[seat[0],index%2===0 ? -17 : -11.1],seat]}
 const colors = ['#6e9d8b','#a497c6','#89a1ba','#cbad78','#b8a2c4','#86aeb7','#c4978d','#a1ac85']
-const restNames = names.filter(name => !['benjie','judith'].includes(name))
+const restNames = names.filter(name => !['benjie','judith','dayao'].includes(name))
 const beds = {
   ...Object.fromEntries(restNames.map((name,index) => [name, [.6+(index%5)*2.25, 4.65+Math.floor(index/5)*2.85]])),
-  benjie:[-9.35,-2.85], judith:[-9.35,-1.95]
+  benjie:[-9.35,-2.85], judith:[-9.35,-1.95], dayao:[9.1,-15.5]
 }
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -79,7 +79,7 @@ export class Campus {
   }
   bed(name,x,z,i) {
     this.box(x,.4,z,1.6,.52,2.5,'#ab9171');this.box(x,.76,z,1.48,.24,2.36,'#eeeadc');this.box(x,.8,z-1.19,1.7,1.3,.12,'#bca480')
-    this.box(x,.94,z-.76,1.12,.16,.56,'#fff9e7');this.box(x,.93,z+.35,1.47,.15,1.53,colors[i]);this.box(x,1.02,z-.27,1.47,.04,.28,'#d5dfd0')
+    this.box(x,.94,z-.76,1.12,.16,.56,'#fff9e7');this.box(x,.93,z+.35,1.47,.15,1.53,colors[i%colors.length]);this.box(x,1.02,z-.27,1.47,.04,.28,'#d5dfd0')
     this.box(x+.93,.5,z-.68,.23,.8,.5,'#c3aa89')
   }
   queenBed(x,z) {
@@ -99,7 +99,7 @@ export class Campus {
     this.box(-3,.01,13,26,.12,2,'#d1cbb6');this.box(-.7,.04,10.5,2,.12,4,'#d1cbb6')
     this.box(-6,.015,16,18,.1,4.4,'#8a9384')
     for(let i=0;i<7;i++) {const x=-14.5+i*2.7;this.box(x,.08,16,.06,.02,4,'#e6e4cb');if(i<6)this.car(x+1.3,16,['#68858e','#b96e56','#d1c3a6','#738b66','#b09d7c','#676f82'][i])}
-    for(const [x,z,s] of [[-17,-12,1.1],[-20,-9,1],[-20,5,1.1],[-14,11,.8],[11,-13,1.1],[12,4,.8],[11,11,1],[21,-9,1],[21,8,1],[-12.5,-17,.9]])this.tree(x,z,s)
+    for(const [x,z,s] of [[-17,-12,1.1],[-20,-9,1],[-20,5,1.1],[-14,11,.8],[13,-16,1.1],[12,4,.8],[11,11,1],[21,-9,1],[21,8,1],[-12.5,-17,.9]])this.tree(x,z,s)
     for(let i=0;i<4;i++) {const x=3.7+i*2.1;this.box(x,.15,-11,.8,.3,.9,'#80915c')}
     for(const z of [5]) {this.box(-14,.58,z,1.1,.18,2.9,'#b4946f');this.box(-14.5,.95,z,.15,.85,2.9,'#ac8b63');for(const d of [-1,1])this.box(-14,.28,z+d,.65,.55,.13,'#525e51')}
     this.box(-14,.07,-.5,2.4,.1,4,'#c5c7a0');this.cylinder(-14,.85,-.5,.65,.12,'#dfd5bb');this.cylinder(-14,.42,-.5,.11,.8,'#797867')
@@ -162,7 +162,8 @@ export class Campus {
     // Staff sleep inside the former specialist room; the outdoor annex is removed.
     this.box(5.2,.46,6.2,11.9,.035,5.7,'#d8ddd2')
     this.box(3.85,.92,3.3,9.1,.95,.16,'#e9e3d4');this.box(11,.92,3.3,.8,.95,.16,'#e9e3d4')
-    for(const name of names)this.desk(name,...positions[name])
+    for(const name of names.filter(name=>name!=='dayao'))this.desk(name,...positions[name])
+    this.dayaoOffice()
     for(const [index,name] of restNames.entries())this.bed(name,...beds[name],names.indexOf(name))
     this.queenBed(-8,-2.4)
     this.sign('BENJIE + JUDITH | PRIVATE OFFICE',-7,3.25,-9.12,7.8);this.sign('THE DEVELOPMENT STUDIO',3.9,3.25,-9.12,6.2)
@@ -170,6 +171,31 @@ export class Campus {
     for(const x of [-18.5,-14.9])this.box(x,1,8.5,.09,2,.09,'#62695e')
     this.sign('BENJIE CREATIVE CAMPUS',-7,1.3,11,5.3);for(const x of [-9,-5])this.box(x,.6,11,.08,1.2,.09,'#647151')
     for(const [x,z] of [[-11.8,-8.3],[-2.3,-8.3],[10.5,-8.3],[10.5,1.2],[-11.8,1.2],[.3,8.8]])this.plant(x,z)
+  }
+  dayaoOffice() {
+    // Dedicated sealed room beside dining; low front wall keeps the cutaway visible.
+    this.box(6.7,.3,-14.3,8.7,.25,7.4,'#d6ddd8')
+    this.box(6.7,1.55,-18,8.7,2.5,.18,'#e9eee8')
+    this.box(2.35,1.05,-14.3,.18,1.5,7.4,'#e9eee8');this.box(11.05,1.05,-14.3,.18,1.5,7.4,'#e9eee8')
+    this.box(6.7,.78,-10.6,8.7,.7,.18,'#e9eee8')
+    this.box(4.4,1.2,-15.6,2.1,.15,1.2,'#bda483')
+    for(const x of [3.6,5.2])this.box(x,.75,-15.6,.12,.9,.85,'#697f7c')
+    this.box(4.4,1.32,-15.6,.9,.06,.65,'#38494e');this.box(4.4,1.62,-15.9,.9,.6,.05,'#38494e');this.box(4.4,1.62,-15.86,.78,.48,.015,'#5bccd1')
+    this.chair(4.4,-14.25);this.sofa(7,-11.9);this.bed('dayao',9.1,-15.5,2)
+    this.plant(3.1,-17);this.sign('DAYAO | PERSONAL OPS',6.7,2.9,-17.85,6,'#395d61')
+  }
+  makeRobot(member) {
+    const sprite=new THREE.Group();this.scene.add(sprite)
+    this.box(0,.25,0,.54,.57,.3,'#dce3e4',sprite);this.box(0,.8,0,.8,.63,.4,'#9faeb4',sprite)
+    this.box(0,.8,.22,.6,.42,.025,'#25343d',sprite)
+    for(const x of [-.18,.18])this.box(x,.84,.245,.12,.16,.03,'#67e7e2',sprite)
+    this.box(0,.2,.18,.22,.18,.04,'#63d4df',sprite)
+    for(const x of [-.4,.4])this.box(x,.19,0,.16,.45,.22,'#8c9da5',sprite)
+    for(const x of [-.18,.18]){this.box(x,-.2,0,.17,.28,.23,'#52656e',sprite);this.box(x,-.39,.08,.25,.13,.4,'#32444e',sprite)}
+    this.box(0,1.21,0,.06,.22,.06,'#657b85',sprite);this.box(0,1.35,0,.16,.1,.13,'#ec776b',sprite)
+    const head=this.box(0,0,0,.5,.2,.5,'#96acb3');head.visible=false
+    const tag=document.createElement('button');tag.className='campus-tag';tag.addEventListener('click',()=>this.select(member.profile));$('#campus-labels').append(tag)
+    const p={member,sprite,head,tag,x:4.4,z:-14.05,initialized:false,route:[],mode:'desk',robot:true};this.people.set(member.profile,p);return p
   }
   car(x,z,color) {
     this.box(x,.48,z,1.65,.65,3,color);this.box(x,.98,z-.15,1.42,.55,1.5,color);this.box(x,1.05,z+.64,1.3,.43,.04,'#b6ced0');this.box(x,1.05,z-.94,1.3,.4,.04,'#b6ced0')
@@ -184,7 +210,8 @@ export class Campus {
     this.box(x,.81,z,2.2,.6,.95,'#b7bc98');this.box(x,1.14,z+.44*facing,2.2,.9,.2,'#b7bc98');for(const dx of [-1,1])this.box(x+dx,1.05,z,.23,.6,1.05,'#a5ae8a')
   }
   makePerson(member) {
-    const tex=this.textureLoader.load(`./workadventure-map/tilesets/characters/${member.profile}.png?v=7`);tex.magFilter=THREE.NearestFilter;tex.minFilter=THREE.NearestFilter;tex.colorSpace=THREE.SRGBColorSpace;tex.repeat.set(1/3,1/4)
+    if(member.profile==='dayao')return this.makeRobot(member)
+    const tex=this.textureLoader.load(`./workadventure-map/tilesets/characters/${member.profile}.png`);tex.magFilter=THREE.NearestFilter;tex.minFilter=THREE.NearestFilter;tex.colorSpace=THREE.SRGBColorSpace;tex.repeat.set(1/3,1/4)
     const spriteMaterial=new THREE.SpriteMaterial({map:tex,transparent:true,alphaTest:.08,depthTest:false,depthWrite:false})
     const sprite=new THREE.Sprite(spriteMaterial);sprite.scale.set(1.72,1.72,1);sprite.renderOrder=20;this.scene.add(sprite)
     // A separate cropped head lies flat on the pillow, with the body under the duvet.
@@ -195,9 +222,12 @@ export class Campus {
   }
   update(snapshot) {
     this.snapshot=snapshot
-    const manager={profile:'benjie',name:'BENJIE',role:'Founder · Hermes Main · Final Reviewer',level:'Owner',state:snapshot.manager.on_shift?'available':'off_shift',state_label:snapshot.manager.on_shift?'On shift · no tracked task':'Off shift',skills:['Team coordination','Project management','Priority and workload planning','Code review','Engineering standards','Final review & approvals'],shift_label:'10 PM–8 AM',personal:'Night shift',recorded_seconds_today:null,recorded_seconds_week:null,gender:'male'}
-    Object.assign(manager,{activity:snapshot.manager.activity,activity_label:snapshot.manager.activity_label,activity_source:snapshot.manager.activity_source,state_label:snapshot.manager.on_shift?'On shift':snapshot.manager.activity_label})
-    this.members=[manager,...snapshot.members]
+    const manager={profile:'benjie',name:'BENJIE',role:'Founder · Hermes Main · Final Reviewer',level:'Owner',state:'idle',state_label:'No verified active task',skills:['Team coordination','Project management','Priority and workload planning','Code review','Engineering standards','Final review & approvals'],shift_label:'Task-based · no shift restriction',personal:'Owner review and coordination',recorded_seconds_today:null,recorded_seconds_week:null,gender:'male'}
+    Object.assign(manager,{activity:'desk',activity_label:'Owner review desk',activity_source:'Visual routine only'})
+    const ops=snapshot.personal_ops?.agent
+    const dayao={profile:'dayao',name:'Dayao',role:'Personal Ops & Job Search Reporter',level:'Personal assistant',state:'idle',state_label:'Runtime unverified',skills:['Read-only Gmail and Calendar','Job matching','Application tracker','Daily reports','English reading reminder'],personal:'Private robot office · stays inside',recorded_seconds_today:null,recorded_seconds_week:null,gender:'robot',activity:'desk',activity_label:'In private office',activity_source:'Visual routine only',current_task:null}
+    if(ops?.status==='running' && snapshot.personal_ops.current_task?.heartbeat_fresh){dayao.state='working';dayao.state_label='Working'}
+    this.members=[manager,...snapshot.members,dayao]
     for(const m of this.members) {const p=this.people.get(m.profile)||this.makePerson(m);p.member=m;p.tag.className=`campus-tag ${m.state} ${m.profile===this.selected?'selected':''}`;p.tag.innerHTML=`<strong><i></i>${safe(m.name)}</strong><small>${safe(m.state_label)} · ${m.recorded_seconds_today == null?'untracked':duration(m.recorded_seconds_today)}</small>`;p.tag.setAttribute('aria-label',`${m.name}: ${m.state_label}. ${m.current_task?.title || 'No active task'}`);this.place(p)}
     for(const m of this.members) {
       const tag=this.people.get(m.profile).tag
@@ -212,6 +242,7 @@ export class Campus {
     }
   }
   modeFor(p) {
+    if(p.member.profile==='dayao')return p.member.profile===this.selected && ['walk','sleep'].includes(this.preview)?this.preview:'desk'
     if(p.member.profile===this.selected && this.preview!=='live')return this.preview
     if(p.member.state==='leave')return 'leave'
     if(p.member.activity==='meeting')return 'meeting'
@@ -221,6 +252,11 @@ export class Campus {
   }
   place(p) {
     const mode=this.modeFor(p);let target
+    if(p.member.profile==='dayao') {
+      target=mode==='sleep'?beds.dayao:mode==='walk'?[7,-12.05]:[4.4,-14.05]
+      p.mode=mode;p.x=target[0];p.z=target[1];p.route=[];p.initialized=true;p.lastMode=mode
+      return
+    }
     if(mode==='sleep')target=beds[p.member.profile]
     else if(mode==='gym')target=[names.indexOf(p.member.profile)%2 ? -10.6 : -8.7,5]
     else if(['walk','break','lounge'].includes(mode))target=[-4.2+(names.indexOf(p.member.profile)%2)*1.2,names.indexOf(p.member.profile)%4<2 ? 7.3 : 4.7]
@@ -251,15 +287,16 @@ export class Campus {
   renderInspector() {
     const m=this.members.find(m=>m.profile===this.selected);if(!m)return
     const task=m.current_task
-    $('#campus-inspector').innerHTML=`<span class="inspector-kicker">TEAM MEMBER</span><div class="inspector-portrait"><span style="background-image:url('./workadventure-map/tilesets/characters/${m.profile}.png?v=7')"></span></div><h3>${safe(m.name)}</h3><p class="role">${safe(m.role)}<br>${safe(m.level)} · ${safe(m.gender==='female'?'Female':'Male')}</p><span class="inspector-state">${safe(m.state_label)}</span><div class="inspector-task"><span class="inspector-kicker">${task?'CURRENT ASSIGNMENT':'CURRENT ACTIVITY'}</span>${task?safe(task.title):m.state==='off_shift'?'Off shift · resting in the campus visualization.':m.state==='leave'?'On leave · away from campus.':m.state==='break'?'On a scheduled 30-minute rest break.':'No active assignment. Ready for a task.'}${task?`<div class="inspector-meta">${safe(task.status)}${m.task_elapsed_seconds!=null?' · '+duration(m.task_elapsed_seconds)+' since task started':''}</div>`:''}</div><span class="inspector-kicker">RECORDED WORK TODAY</span><div class="inspector-time">${m.recorded_seconds_today==null?'Not tracked':duration(m.recorded_seconds_today)}</div><p class="inspector-meta">This week: ${m.recorded_seconds_week==null?'not tracked':duration(m.recorded_seconds_week)}<br>${safe(m.shift_label || (m.shift==='night'?'10 PM–8 AM':'9 AM–5 PM'))}<br>${safe(m.personal||'')}</p><p class="inspector-meta">${(m.skills||[]).map(safe).join(' · ')}</p>${m.telegram_url?`<div class="inspector-links"><a href="${safe(m.telegram_url)}" target="_blank" rel="noreferrer">Open Telegram desk ↗</a></div>`:''}<div class="routine-controls"><label class="inspector-kicker" for="routine-preview">PREVIEW CHARACTER ROUTINE</label><select id="routine-preview"></select><p class="routine-note">${this.preview==='live'?'Routines illustrate status; recorded time comes from Hermes.':'Animation preview only. Hermes status and work time are unchanged.'}</p></div>`
+    $('#campus-inspector').innerHTML=`<span class="inspector-kicker">TEAM MEMBER</span><div class="inspector-portrait"><span style="background-image:url('${m.profile==='dayao'?'./assets/dayao-robot.png':`./workadventure-map/tilesets/characters/${m.profile}.png`}');${m.profile==='dayao'?'background-size:contain;background-repeat:no-repeat;background-position:center':''}"></span></div><h3>${safe(m.name)}</h3><p class="role">${safe(m.role)}<br>${safe(m.level)} · ${safe(m.gender==='robot'?'Robot':m.gender==='female'?'Female':'Male')}</p><span class="inspector-state">${safe(m.state_label)}</span><div class="inspector-task"><span class="inspector-kicker">${task?'CURRENT ASSIGNMENT':'CURRENT ACTIVITY'}</span>${task?safe(task.title):m.state==='off_shift'?'Off shift · resting in the campus visualization.':m.state==='leave'?'On leave · away from campus.':m.state==='break'?'On a scheduled 30-minute rest break.':'No active assignment. Ready for a task.'}${task?`<div class="inspector-meta">${safe(task.status)}${m.task_elapsed_seconds!=null?' · '+duration(m.task_elapsed_seconds)+' since task started':''}</div>`:''}</div><span class="inspector-kicker">RECORDED WORK TODAY</span><div class="inspector-time">${m.recorded_seconds_today==null?'Not tracked':duration(m.recorded_seconds_today)}</div><p class="inspector-meta">This week: ${m.recorded_seconds_week==null?'not tracked':duration(m.recorded_seconds_week)}<br>${safe(m.shift_label || 'Task-based · no shift restriction')}<br>${safe(m.personal||'')}</p><p class="inspector-meta">${(m.skills||[]).map(safe).join(' · ')}</p>${m.telegram_url?`<div class="inspector-links"><a href="${safe(m.telegram_url)}" target="_blank" rel="noreferrer">Open Telegram desk ↗</a></div>`:''}<div class="routine-controls"><label class="inspector-kicker" for="routine-preview">PREVIEW CHARACTER ROUTINE</label><select id="routine-preview"></select><p class="routine-note">${this.preview==='live'?'Routines illustrate status; recorded time comes from Hermes.':'Animation preview only. Hermes status and work time are unchanged.'}</p></div>`
     const routines=document.createElement('div');routines.className='routine-buttons';routines.setAttribute('role','group');routines.setAttribute('aria-label','Preview character routine')
     for(const [value,label] of [['live','Live'],['desk','Computer'],['walk','Sofa'],['dining','Dining'],['meeting','Meeting'],['smoke','Smoking area'],['gym','Gym'],['sleep','Rest']]) {
+      if(m.profile==='dayao' && !['live','desk','walk','sleep'].includes(value))continue
       const button=document.createElement('button');button.textContent=label;button.setAttribute('aria-pressed',String(this.preview===value));button.onclick=()=>{this.preview=value;this.place(this.people.get(this.selected));this.renderInspector()};routines.append(button)
     }
     $('#routine-preview').replaceWith(routines)
-    const life=document.createElement('p');life.className='inspector-meta';life.textContent=`${m.activity_label||''} · ${m.activity_source||'Schedule'} · ${m.completed_tasks||0} verified tasks done`;document.querySelector('.inspector-task').prepend(life)
+    const life=document.createElement('p');life.className='inspector-meta';life.textContent=`${m.activity_label||''} · ${m.activity_source||'Visual routine'} · ${m.completed_tasks||0} tasks recorded complete (not a quality verification)`;document.querySelector('.inspector-task').prepend(life)
     document.querySelector('.routine-controls label').removeAttribute('for')
-    if(m.profile!=='benjie') {const reviewButton=document.createElement('button');reviewButton.className='review-worker-button';reviewButton.textContent='Review work & access';reviewButton.onclick=()=>document.dispatchEvent(new CustomEvent('worker-review',{detail:m.profile}));document.querySelector('.inspector-task').after(reviewButton)}
+    if(!this.snapshot.public_preview && !['benjie','dayao'].includes(m.profile)) {const reviewButton=document.createElement('button');reviewButton.className='review-worker-button';reviewButton.textContent='Review work & access';reviewButton.onclick=()=>document.dispatchEvent(new CustomEvent('worker-review',{detail:m.profile}));document.querySelector('.inspector-task').after(reviewButton)}
     if(task?.scheduled_for) {
       const schedule=document.createElement('p');schedule.className='inspector-meta';schedule.textContent='Earliest start: '+new Date(task.scheduled_for).toLocaleString('en-PH',{timeZone:'Asia/Singapore',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})+' · waits for prerequisite';document.querySelector('.inspector-task').append(schedule)
     }
@@ -289,9 +326,9 @@ export class Campus {
       if(p.mode==='gym'&&!p.route.length){walking=true;direction=9}
       if(p.mode==='dining'&&!walking)direction=names.indexOf(p.member.profile)%2===0?0:9
       const frame=walking&&!reduced?[0,1,2,1][Math.floor(t*7)%4]:1
-      p.tex.offset.set(frame/3,1-(Math.floor(direction/3)+1)/4)
+      p.tex?.offset.set(frame/3,1-(Math.floor(direction/3)+1)/4)
       const seated=['walk','break','lounge','dining','meeting'].includes(p.mode)&&!walking
-      p.sprite.position.set(p.x,seated ? 1.02 : p.mode==='desk'&&!walking ? 1.56 : 1.28,p.z);p.sprite.scale.set(1.72,seated ? 1.18 : 1.72,1);p.sprite.visible=!['sleep','leave'].includes(p.mode)
+      p.sprite.position.set(p.x,seated ? 1.02 : p.mode==='desk'&&!walking ? 1.56 : 1.28,p.z);p.sprite.scale.set(p.robot?1:1.72,p.robot?1:seated ? 1.18 : 1.72,1);p.sprite.visible=!['sleep','leave'].includes(p.mode)
       p.head.visible=p.mode==='sleep';const [bx,bz]=beds[p.member.profile];const owner=['benjie','judith'].includes(p.member.profile);p.head.position.set(bx,1.08,bz-(owner?0:.78));p.head.rotation.z=owner?-Math.PI/2:0
       // Keep the floating tag above the full sprite so the agent and animation stay visible.
       const anchor=new THREE.Vector3(p.x,p.mode==='sleep'?1.45:3.15,p.z+(p.mode==='sleep'?1.3:0)).project(this.camera);const stage=$('#office-map');const x=(anchor.x*.5+.5)*stage.clientWidth,y=(-anchor.y*.5+.5)*stage.clientHeight

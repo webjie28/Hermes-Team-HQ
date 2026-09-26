@@ -82,6 +82,35 @@ main { padding-bottom: 40px; }
 .primary, .form-actions .primary { background: var(--olive-deep); color: white; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; margin-bottom: 14px; }
 .board-columns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: start; }
+.personal-ops { display:grid; grid-template-columns:minmax(240px,.8fr) 2fr; gap:18px; margin:14px 0 20px; padding:18px; border-radius:20px; background:#253d32; color:#f7f1df; }
+.personal-ops h2,.personal-ops p { margin:4px 0; }
+.ooda-loop { display:grid; grid-template-columns:repeat(4,minmax(76px,1fr)); gap:8px; margin:14px 0; }
+.ooda-loop article { display:grid; grid-template-columns:auto 1fr; gap:0 8px; align-items:center; padding:9px; border:1px solid #ffffff2b; border-radius:12px; background:#ffffff0d; }
+.ooda-loop b { grid-row:1/3; display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:#d9bc69; color:#253d32; }
+.ooda-loop span { font-weight:800; }
+.ooda-loop small { color:#d8dfd8; }
+.ops-focus { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.ops-focus span { padding:9px; border-left:3px solid #d9bc69; background:#ffffff0a; font-size:.72rem; color:#d8dfd8; }
+.ops-focus strong { color:#fff; font-size:.78rem; }
+.ops-sources { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.ops-sources article { display:flex; flex-direction:column; gap:5px; padding:12px; border-radius:14px; background:rgba(255,255,255,.09); }
+.ops-sources span { text-transform:capitalize; font-size:.78rem; }
+.ops-sources strong { font-size:.8rem; text-transform:capitalize; }
+.ops-sources strong.connected { color:#8ee3a8; }
+.ops-sources strong.pending { color:#ffd484; }
+.ops-sources small { color:#d2dacd; }
+.project-process { margin: 18px 0; padding: 18px; border: 1px solid rgba(43,61,48,.15); border-radius: 20px; background: rgba(255,255,250,.72); }
+.process-heading { display:flex; justify-content:space-between; align-items:end; gap:18px; margin-bottom:14px; }
+.process-heading span { display:block; color:#8d4936; font-size:.72rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+.process-heading strong { display:block; margin-top:4px; font-size:1.05rem; }
+.process-heading p { max-width:430px; margin:0; color:#586258; font-size:.86rem; }
+.process-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.process-card { display:grid; grid-template-columns:34px 1fr; gap:10px; padding:12px; border-radius:14px; background:#f3efdf; }
+.process-number { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:#334d3c; color:white; font-weight:800; }
+.process-card small,.process-card p,.process-card b { display:block; margin:0; font-size:.75rem; }
+.process-card h3 { margin:3px 0 5px; font-size:.92rem; }
+.process-card p { color:#57635a; }
+.process-card b { margin-top:6px; color:#8d4936; }
 .board-column { min-height: 220px; padding: 12px; border-radius: 18px; background: rgba(244,241,229,.58); }
 .board-column h3 { margin: 2px 3px 12px; font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; }
 .task-card { padding: 12px; margin-bottom: 9px; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); box-shadow: 0 7px 22px rgba(32,45,27,.1); }
@@ -222,12 +251,17 @@ main { padding-bottom: 40px; }
 @media (prefers-reduced-motion: reduce) { .woka-sprite { animation: none !important; } }
 
 @media (max-width: 850px) {
+  .personal-ops { grid-template-columns:1fr; }
+  .ooda-loop,.ops-focus { grid-template-columns:1fr 1fr; }
+  .ops-sources { grid-template-columns:1fr; }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
   .metrics { grid-template-columns: repeat(2, 1fr); }
   .board-columns { grid-template-columns: repeat(2, 1fr); }
   .office-map { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 520px) {
+  .process-heading { align-items:start; flex-direction:column; }
+  .process-grid { grid-template-columns:1fr; }
   .topbar, .tabs, main { width: min(100% - 20px, 1180px); }
   .topbar { align-items: center; padding-top: 22px; }
   .clock-card { min-width: 112px; padding: 10px; }
@@ -252,3 +286,5 @@ main { padding-bottom: 40px; }
   .pixel-campus { min-width: 900px; min-height: 650px; }
   .workadventure-preview { min-width: 820px; }
 }
+[hidden] { display: none !important; }
+.public-preview .office-actions { display: none; }

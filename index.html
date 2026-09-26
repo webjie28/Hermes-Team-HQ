@@ -5,8 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#909b5d">
   <title>Hermes Team HQ</title>
-  <link rel="stylesheet" href="./styles.css?v=7">
-  <link rel="stylesheet" href="./campus.css?v=16">
+  <meta name="description" content="BENJIE's AI-assisted development campus — team roles, project progress and owner-controlled reviews.">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hermes Team HQ">
+  <meta property="og:description" content="Meet the team, follow project progress, and explore the virtual campus.">
+  <meta property="og:url" content="https://hermes-team-hq.vercel.app/">
+  <meta property="og:image" content="https://hermes-team-hq.vercel.app/assets/hermes-team-standing.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hermes Team HQ">
+  <meta name="twitter:description" content="An AI-assisted development campus with owner-controlled reviews.">
+  <meta name="twitter:image" content="https://hermes-team-hq.vercel.app/assets/hermes-team-standing.png">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./campus.css">
 </head>
 <body>
   <header class="topbar">
@@ -18,10 +29,12 @@
   </header>
 
   <nav class="tabs" aria-label="Views">
-    <button class="tab active" data-view="office">Campus</button>
-    <button class="tab" data-view="team">Team & Skills</button>
-    <button class="tab" data-view="board">Board</button>
-    <button id="open-review-desk"><span>Review desk</span><b id="review-pending-count">0</b></button>
+    <div role="tablist" aria-label="Campus views" style="display:contents">
+    <button class="tab active" id="office-tab" role="tab" aria-selected="true" aria-controls="office-view" tabindex="0" data-view="office">Campus</button>
+    <button class="tab" id="team-tab" role="tab" aria-selected="false" aria-controls="team-view" tabindex="-1" data-view="team">Team & Skills</button>
+    <button class="tab" id="board-tab" role="tab" aria-selected="false" aria-controls="board-view" tabindex="-1" data-view="board">Board</button>
+    </div>
+    <button id="open-review-desk" hidden><span>Review desk</span><b id="review-pending-count">0</b></button>
   </nav>
 
   <main>
@@ -32,13 +45,15 @@
       <article class="gateway-card"><span>Hermes gateway</span><strong id="gateway-state">Checking</strong></article>
     </section>
 
-    <p class="schedule-line"><span class="calendar-icon">▣</span> Developers: Mon–Fri 8 AM–5 PM · Lunch 12–1 PM · two scheduled 30-minute rest breaks · BENJIE & Judith: Mon–Fri 10 PM–8 AM <span id="last-refresh"></span></p>
+    <p class="schedule-line"><span class="calendar-icon">▣</span> Project sprint mode · no morning/night split · live task + heartbeat = Working · all outputs still require evidence and approval <span id="last-refresh"></span></p>
 
-    <section id="team-view" class="view">
+    <section id="personal-ops" class="personal-ops" aria-label="Personal operations tracker"></section>
+
+    <section id="team-view" role="tabpanel" aria-labelledby="team-tab" tabindex="0" hidden class="view">
       <div id="team-grid" class="team-grid"></div>
     </section>
 
-    <section id="board-view" class="view">
+    <section id="board-view" role="tabpanel" aria-labelledby="board-tab" tabindex="0" hidden class="view">
       <div class="section-heading">
         <div><p class="eyebrow">SHARED HERMES KANBAN</p><h2>Development board</h2><p id="project-summary" class="project-summary">Loading project plan…</p></div>
         <button id="show-task-form" class="primary">+ Assign task</button>
@@ -49,10 +64,11 @@
         <label class="wide">Details<textarea id="task-body" rows="3" placeholder="Definition of done, sources, output format..."></textarea></label>
         <div class="form-actions"><button type="button" id="cancel-task">Cancel</button><button class="primary" type="submit">Create task</button></div>
       </form>
+      <section id="project-process" class="project-process" aria-label="Project process"></section>
       <div id="board-columns" class="board-columns"></div>
     </section>
 
-    <section id="office-view" class="view active">
+    <section id="office-view" role="tabpanel" aria-labelledby="office-tab" tabindex="0" class="view active">
       <div class="office-shell">
         <div class="office-title"><div><p class="eyebrow">YOUR PEOPLE, ONE PLACE</p><h2>BENJIE Development Campus</h2></div><div class="office-actions"><a href="https://play.workadventu.re/_/benjie-team-hq/localhost:5173/team-hq.tmj" target="_blank" rel="noreferrer">WorkAdventure ↗</a></div></div>
         <div class="campus-layout">
@@ -75,6 +91,6 @@
   </main>
 
   <div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="./app.js?v=23"></script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>

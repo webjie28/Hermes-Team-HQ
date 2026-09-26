@@ -29,7 +29,8 @@ The public site is a safe, read-only showcase. BENJIE's private localhost dashbo
 
 - Interactive isometric office rendered with Three.js
 - Single-monitor workstations with Red, Espina and Marielle beside the private office, a 12-seat meeting room with an open doorway, 10-seat dining area, gym, covered smoking area, nine staff beds inside the former specialist room, and a horizontal queen bed in BENJIE and Judith's private office
-- Seven specialist profiles with roles, skills, active assignments, and work-time summaries
+- Ten specialist profiles with roles, skills, active assignments, and work-time summaries
+- Dayao, the robot personal-ops assistant, has a separate office beside dining with a laptop, chair, sofa and bed; his visual routines stay inside
 - Team and skills directory
 - Shared development board
 - Owner review desk interface
@@ -46,9 +47,10 @@ The public site is a safe, read-only showcase. BENJIE's private localhost dashbo
 | Rick | Senior Full-stack Engineer | Implement application flows, APIs, data integration, validation, and performance fixes | Working feature, test evidence, and data/schema changes |
 | Fulton | Senior QA & Security Engineer | Create tests, reproduce defects, run regression checks, and review common security risks | Pass/fail report, evidence, blockers, and release recommendation |
 | Joem | Senior DevOps & Release Engineer | Prepare CI/CD, preview releases, health checks, observability, and rollback instructions | Release candidate and exact deployment request; production remains approval-gated |
-| Red | Senior Backend & Data Engineer | Build secure APIs, authentication, data models, migrations, and server-side validation | Schema changes, access requirements, migration evidence, and production-impacting decisions |
+| Red | Junior UI/UX apprentice | Wireframes, property-card design, HTML/CSS practice | Espina's design review and BENJIE's approval |
 | Espina | Senior UI/UX & Design Systems Designer | Create user flows, wireframes, prototypes, reusable design tokens, and usability reviews | Design direction, interactive prototype, accessibility decisions, and visual sign-off |
-| Marielle | Senior QA Automation & Acceptance Lead | Convert acceptance criteria into E2E, cross-browser, mobile, and release-readiness tests | Independent acceptance report, evidence, failures, and release recommendation |
+| Marielle | Junior UI/UX apprentice | User flows, usability checks, design QA | Espina's review, evidence, and BENJIE's approval |
+| Dayao | Personal Ops & Job Search Reporter | Read-only mail/calendar summaries, job tracking, reports and reading reminders | Any application or external action remains with BENJIE |
 
 BENJIE remains the owner, project manager, engineering-standards lead, code reviewer, and final approver. Judith additionally owns documentation and knowledge management, so architectural decisions, sources, runbooks, and handoffs stay connected instead of becoming a separate documentation silo.
 
@@ -76,7 +78,7 @@ Assigned → Agent works → Tests and report → Approval inbox
                                               └─ Instruct
 ```
 
-“24/7 inbox” means the queue is durable. The current local runtime keeps working while the host computer is running; the planned Google Cloud VM will keep the private gateway online when that computer is off. The public Vercel site stays read-only and never exposes the private approval ledger.
+“24/7 inbox” means the queue is durable. The current local runtime keeps working while the host computer is running; there is no verified always-on cloud worker, and the Google Cloud rollout was stopped. The public Vercel site stays read-only and never exposes the private approval ledger.
 
 ## Architecture
 
@@ -104,7 +106,7 @@ This separation prevents a public static site from becoming an exposed administr
 | Delivery | GitHub + Vercel | Automated read-only public deployment on every push to `main` |
 | Agent communication | A2A JSON-RPC 2.0 | Agent Cards, durable context IDs, parent-child delegation, and task state history |
 
-GitHub's language panel is generated automatically from tracked source files. The README badges mirror the current repository mix shown by GitHub: JavaScript 61.7%, CSS 32.2%, and HTML 6.1%. Python powers the private localhost control plane and is intentionally excluded from the public static build.
+GitHub's language panel is generated automatically from tracked source files. The README badges are a historical snapshot of the repository mix: JavaScript 61.7%, CSS 32.2%, and HTML 6.1%. Python powers the private localhost control plane and is intentionally excluded from the public static build.
 
 ## Run locally
 
@@ -116,13 +118,19 @@ python -m http.server 8080
 
 Open `http://localhost:8080`. Opening `index.html` directly is not supported because the browser must load JavaScript modules over HTTP.
 
+## Runtime readiness
+
+Each specialist has a separate Hermes profile and role; profiles can share the local model without sharing conversation history. A different model subscription per character is not required. Task model overrides must match the harness context-window requirement, and CLI workers need file/terminal tools to produce artifacts. A task marked complete is not proof of a tested artifact. Production and promotions still require owner review.
+
+Dayao reuses the former Mia/co-worker runtime and existing scheduled reports. These Codex-hosted reports are distinct from a continuously running Hermes worker. Telegram connection is not verified until the intended bot is identified and tested.
+
 ## Deployment
 
 Every push to `main` deploys automatically to [Vercel](https://hermes-team-hq.vercel.app/). The public build requires no repository secrets.
 
 ## A2A agent network
 
-The private Hermes gateway exposes one localhost-only A2A listener on port `9900`. Espina is the parent reviewer; Red and Marielle are child agents. Their canonical Agent Card routes are `/espina`, `/red`, and `/marielle`. Tasks retain a context ID and move through A2A task states before Espina's review and BENJIE's final approval. The agents cannot self-approve deployment, credential, purchase, or promotion decisions.
+The private Hermes gateway is configured for one localhost-only A2A listener on port `9900`. Espina is the parent reviewer; Red and Marielle are child agents. Configured Agent Card routes are `/espina`, `/red`, and `/marielle`. Tasks retain a context ID and move through A2A task states before Espina's review and BENJIE's final approval. The agents cannot self-approve deployment, credential, purchase, or promotion decisions.
 
 ## Security and privacy
 
@@ -150,4 +158,4 @@ Espina is the parent design agent and mentor for Red and Marielle, two recent Co
 
 ## Project operating cadence
 
-Each new project receives an isolated workspace and Kanban board, a written business-day estimate, named owners and dependencies, daily evidence updates, recorded meeting notes, required documents, QA/security gates, release and rollback instructions, and final approval by BENJIE. The public site displays a safe read-only preview; private task content and approval records stay local.
+Each new project receives an isolated workspace and Kanban board, a written business-day estimate, named owners and dependencies, daily evidence updates, recorded meeting notes, required documents, QA/security gates, release and rollback instructions, and final approval by BENJIE. The public site does not claim live worker activity when no authenticated backend is connected; private task content and approval records stay local.
